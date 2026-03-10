@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="header">
+    <nav class="navbar">
+
+        <!-- LEFT -->
+        <div class="nav-left">
+            <img th:src="@{/images/logo.png}" class="logo-img">
+            <ul class="nav-links">
+                <li><a href="#">Phim</a></li>
+                <li><a href="#">Sự kiện</a></li>
+                <li><a href="#">Rạp / Giá vé</a></li>
+            </ul>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="nav-auth">
+            <a href="#" class="login-btn">Đăng nhập</a>
+            <a href="#" class="signup-btn">Đăng ký</a>
+        </div>
+        
+    </nav>
+</header>
+
+</body>
+</html>
