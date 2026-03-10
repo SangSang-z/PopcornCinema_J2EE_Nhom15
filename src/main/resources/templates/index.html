@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Popcorn Cinema</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+<!-- HEADER -->
+<div th:replace="fragments/header :: header"></div>
+
+<!-- HERO SLIDER -->
+<section class="hero-slider">
+    <div class="slides">
+
+        <div class="slide active">
+            <img th:src="@{/images/banner1.jpg}" alt="">
+        </div>
+
+        <div class="slide">
+            <img th:src="@{/images/banner2.jpg}" alt="">
+        </div>
+
+        <div class="slide">
+            <img th:src="@{/images/banner3.png}" alt="">
+        </div>
+
+        <div class="slide">
+            <img th:src="@{/images/banner4.png}" alt="">
+        </div>
+
+        <div class="slide">
+            <img th:src="@{/images/banner5.jpg}" alt="">
+        </div>
+
+        <div class="slide">
+            <img th:src="@{/images/banner6.jpg}" alt="">
+        </div>
+    </div>
+</section>
+
+<!-- MOVIE SECTION -->
+<section class="movie-section">
+    <h2>Phim đang chiếu</h2>
+    <div class="movie-list">
+
+        <div class="movie-card">
+            <img th:src="@{/images/movie1.jpg}" alt="">
+            <h3>Diễm ơi</h3>
+        </div>
+
+        <div class="movie-card">
+            <img th:src="@{/images/movie2.jpg}" alt="">
+            <h3>Cảm ơn người đã thức cùng tôi</h3>
+        </div>
+
+        <div class="movie-card">
+            <img th:src="@{/images/movie3.jpg}" alt="">
+            <h3>Báu Vật Trời Cho</h3>
+        </div>
+
+    </div>
+</section>
+
+<!-- PROMOTION SECTION -->
+<section class="promotion-section">
+    <h2>Khuyến Mãi / Sự Kiện</h2>
+    <div class="promotion-list">
+        <div class="promo-card">
+            <img th:src="@{/images/promo1.jpg}" alt="">
+            <div class="promo-content">
+                <h3>Ưu đãi ngày lễ</h3>
+                <p>Giảm 20% giá vé cho các suất chiếu dịp lễ.</p>
+            </div>
+        </div>
+
+        <div class="promo-card">
+            <img th:src="@{/images/promo2.jpg}" alt="">
+            <div class="promo-content">
+                <h3>Combo bắp nước</h3>
+                <p>Mua vé tặng combo bắp nước miễn phí.</p>
+            </div>
+        </div>
+
+        <div class="promo-card">
+            <img th:src="@{/images/promo3.jpg}" alt="">
+            <div class="promo-content">
+                <h3>Ngày hội phim</h3>
+                <p>Vé đồng giá cho tất cả phim trong tuần.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<div th:replace="fragments/footer :: footer"></div>
+<!-- Script cho Slide -->
+<script th:src="@{/js/slider.js}"></script>
+</body>
+</html>
