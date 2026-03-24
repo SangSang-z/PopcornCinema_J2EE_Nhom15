@@ -1,0 +1,1364 @@
+/* =====================================================
+   POPCORN CINEMA ADMIN PANEL
+   MAIN COLOR: #0B1F3A
+   ===================================================== */
+
+
+/* =====================================================
+   GLOBAL
+   ===================================================== */
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Segoe UI, Arial, sans-serif;
+background:#f4f6f9;
+overflow-x:hidden;
+}
+
+.page-title{
+margin-bottom:24px;
+font-size:26px;
+font-weight:700;
+color:#1f2d3d;
+}
+
+.page-subtitle{
+font-size:18px;
+font-weight:500;
+color:#6c7a89;
+margin-left:6px;
+}
+
+/* SIDEBAR FOOTER */
+
+.sidebar{
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+}
+
+.sidebar-footer{
+margin-top:auto;
+padding:20px 10px;
+text-align:center;
+color:rgba(255,255,255,0.5);
+font-size:12px;
+}
+
+.sidebar-footer hr{
+border:none;
+height:1px;
+background:rgba(255,255,255,0.15);
+margin-bottom:10px;
+}
+
+
+/* =====================================================
+   ADMIN LAYOUT STRUCTURE
+   ===================================================== */
+
+.admin-layout{
+display:flex;
+width:100%;
+min-height:100vh;
+}
+
+.error-msg {
+    color: #ff4d4f;
+    background: #fff1f0;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+
+/* =====================================================
+   SIDEBAR
+   ===================================================== */
+
+.sidebar{
+width:210px;
+background:#0B2341;
+height:100vh;
+color:white;
+padding:0 16px;
+
+position:fixed;
+top:0;
+left:0;
+
+display:flex;
+flex-direction:column;
+z-index:100;
+}
+
+
+/* ===== LOGO ===== */
+
+.logo{
+height:50px;
+display:flex;
+align-items:center;
+margin-top:20px;
+margin-bottom:30px;
+}
+
+.logo img{
+width:125px;
+}
+
+
+/* ===== MENU ===== */
+
+.menu{
+list-style:none;
+padding:0;
+margin:0;
+flex:1;
+}
+
+.menu-item{
+margin-bottom:6px;
+}
+
+.menu-item a{
+display:flex;
+align-items:center;
+gap:12px;
+padding:10px 14px;
+border-radius:8px;
+color:white;
+text-decoration:none;
+font-size:14px;
+transition:.25s;
+}
+
+.menu-item a:hover{
+background:rgba(255,255,255,0.08);
+transform:translateX(3px);
+}
+
+.menu-item.active a{
+background:#f39c12;
+font-weight:600;
+box-shadow:0 3px 10px rgba(0,0,0,0.2);
+}
+
+.menu-item a i{
+width:18px;
+font-size:15px;
+}
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.admin-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+background:linear-gradient(90deg,#102B4A,#0B2341);
+padding:10px 24px;
+color:white;
+height:50px;
+
+margin-left:210px;
+width:calc(100% - 210px);
+}
+
+
+/* ===== SEARCH ===== */
+
+.admin-search{
+display:flex;
+align-items:center;
+background:white;
+border-radius:20px;
+padding:7px 14px;
+width:300px;
+margin-right:auto;
+box-shadow:0 2px 6px rgba(0,0,0,0.15);
+}
+
+.admin-search input{
+border:none;
+outline:none;
+width:100%;
+font-size:13px;
+margin-left:6px;
+}
+
+
+/* ===== HEADER RIGHT ===== */
+
+.header-right{
+display:flex;
+align-items:center;
+gap:18px;
+}
+
+
+/* =====================================================
+   USER MENU
+   ===================================================== */
+.user-menu{
+    position: relative;
+}
+
+/* Nút admin */
+.user-trigger{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    background: rgba(255,255,255,0.15);
+    padding: 6px 12px;
+    border-radius: 20px;
+
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+
+    transition: all 0.2s ease;
+}
+
+.user-trigger:hover{
+    background: rgba(255,255,255,0.25);
+}
+
+/* Avatar */
+.avatar{
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+/* ================= DROPDOWN ================= */
+
+.user-dropdown{
+    position: absolute;
+    right: 0;
+    top: 45px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    width: 170px;
+    display: none;             
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 9999;          
+    animation: fadeIn 0.2s ease;
+}
+
+.user-dropdown.show{
+    display: flex;
+}
+
+
+/* Item */
+.user-dropdown a{
+    padding: 10px 14px;
+    text-decoration: none;
+    color: #333;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 14px;
+
+    transition: all 0.2s ease;
+}
+
+.user-dropdown a:hover{
+    background: #f5f5f5;
+}
+
+/* ================= ANIMATION ================= */
+
+@keyframes fadeIn{
+    from{
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to{
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =====================================================
+   CONTENT AREA
+   ===================================================== */
+
+.admin-content{
+flex:1;
+padding:30px 24px;
+margin-left:210px;
+}
+
+
+/* =====================================================
+   PAGE TITLE
+   ===================================================== */
+
+.page-title{
+margin-bottom:20px;
+font-size:24px;
+font-weight:600;
+}
+
+
+/* =====================================================
+   DASHBOARD GRID
+   ===================================================== */
+
+.dashboard-grid{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:20px;
+width:100%;
+max-width:100%;
+}
+
+.left-dashboard{
+display:flex;
+flex-direction:column;
+gap:20px;
+}
+
+/* =====================================================
+   STATS CARDS
+   ===================================================== */
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,minmax(0,1fr));
+gap:18px;
+width:100%;
+margin-bottom:10px;
+}
+
+.stat-card{
+background:#0B2341;
+color:white;
+padding:16px;
+border-radius:14px;
+display:flex;
+align-items:center;
+gap:12px;
+transition:.2s;
+}
+
+.stat-card:hover{
+transform:translateY(-3px);
+box-shadow:0 4px 12px rgba(0,0,0,0.2);
+}
+
+.stat-icon{
+width:36px;
+height:36px;
+background:#f39c12;
+display:flex;
+align-items:center;
+justify-content:center;
+border-radius:8px;
+font-size:16px;
+}
+
+.stat-info h4{
+margin:0;
+font-size:13px;
+opacity:.85;
+}
+
+.stat-info p{
+margin:3px 0 0;
+font-size:18px;
+font-weight:700;
+}
+
+
+/* =====================================================
+   DASHBOARD BOX
+   ===================================================== */
+
+.chart-box,
+.top-box,
+.right-panel{
+background:#0B2341;
+color:white;
+padding:18px;
+border-radius:14px;
+}
+
+.box-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:12px;
+}
+
+.box-header h3{
+font-size:15px;
+font-weight:600;
+margin:0;
+}
+
+.tag{
+background:#eee;
+color:#333;
+padding:3px 10px;
+border-radius:20px;
+font-size:11px;
+}
+
+
+/* =====================================================
+   TOP MOVIES
+   ===================================================== */
+
+.top-movies{
+list-style:none;
+padding:0;
+margin-top:10px;
+}
+
+.top-movies li{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:10px;
+}
+
+.top-movies img{
+width:34px;
+height:34px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.rank{
+width:20px;
+height:20px;
+background:#f39c12;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:11px;
+font-weight:bold;
+color:white;
+}
+
+
+/* =====================================================
+   NOW SHOWING
+   ===================================================== */
+
+.now-showing{
+list-style:none;
+padding:0;
+margin-top:12px;
+}
+
+.now-showing li{
+display:flex;
+align-items:center;
+gap:10px;
+padding:8px;
+border-radius:8px;
+margin-bottom:8px;
+background:#0f2a4a;
+transition:.2s;
+}
+
+.now-showing li:hover{
+background:#14365f;
+}
+
+.now-showing img{
+width:38px;
+height:54px;
+object-fit:cover;
+border-radius:6px;
+}
+
+
+/* =====================================================
+   ADMIN FORM
+   ===================================================== */
+
+.admin-form{
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 2px 10px rgba(0,0,0,0.05);
+max-width:900px;
+}
+
+
+/* =====================================================
+   ADMIN CARD
+   ===================================================== */
+
+.admin-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+
+/* =====================================================
+   TABLE
+   ===================================================== */
+
+.admin-table{
+margin:0;
+width:100%;
+}
+
+.admin-table thead{
+background:#0B1F3A;
+color:white;
+}
+
+.admin-table th{
+padding:14px;
+}
+
+.admin-table td{
+padding:12px;
+vertical-align:middle;
+}
+
+.admin-table tbody tr:hover{
+background:#f7f9fc;
+}
+
+
+/* =====================================================
+   MOVIE POSTER
+   ===================================================== */
+
+.movie-poster{
+width:50px;
+height:70px;
+object-fit:cover;
+border-radius:6px;
+}
+
+
+/* =====================================================
+   STATUS
+   ===================================================== */
+
+.status{
+padding:5px 10px;
+border-radius:6px;
+font-size:13px;
+font-weight:500;
+}
+
+.showing{
+background:#e6f7ee;
+color:#28a745;
+}
+
+.coming{
+background:#fff4e5;
+color:#f39c12;
+}
+
+
+/* =====================================================
+   ACTION BUTTONS
+   ===================================================== */
+
+.actions{
+display:flex;
+gap:8px;
+}
+
+.btn-edit{
+padding:5px 10px;
+background:#ffc107;
+color:black;
+border-radius:5px;
+text-decoration:none;
+}
+
+.btn-delete{
+padding:5px 10px;
+background:#dc3545;
+color:white;
+border-radius:5px;
+text-decoration:none;
+}
+
+.btn-edit:hover{
+background:#e0a800;
+}
+
+.btn-delete:hover{
+background:#c82333;
+}
+
+
+/* =====================================================
+   SMALL BUTTON
+   ===================================================== */
+
+.btn-small{
+padding:6px 12px;
+background:#f39c12;
+color:#0B2341;
+border:none;
+border-radius:8px;
+font-size:13px;
+cursor:pointer;
+transition:.2s;
+}
+
+.btn-small:hover{
+background:#e08b0c;
+}
+
+
+/* =====================================================
+   DOT
+   ===================================================== */
+
+.dot{
+width:10px;
+height:10px;
+background:#f39c12;
+border-radius:50%;
+display:inline-block;
+margin-right:8px;
+}
+
+/* ===============================
+   SHOWTIME PAGE
+================================ */
+
+/* Title */
+
+.showtime-title{
+font-size:24px;
+font-weight:600;
+margin-bottom:20px;
+color:#1f2d3d;
+}
+
+
+/* ===============================
+   SHOWTIME HEADER
+================================ */
+
+.showtime-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.showtime-title h2{
+font-size:24px;
+font-weight:600;
+margin:0;
+}
+
+.showtime-title p{
+font-size:13px;
+color:#7a8a9a;
+margin:4px 0 0;
+}
+
+
+/* ===============================
+   ADD BUTTON
+================================ */
+
+.btn-add-showtime{
+background:#f39c12;
+color:#0B2341;
+padding:10px 18px;
+border-radius:8px;
+font-size:14px;
+font-weight:600;
+text-decoration:none;
+transition:0.2s;
+}
+
+.btn-add-showtime:hover{
+background:#e08b0c;
+transform:translateY(-1px);
+}
+
+
+/* ===============================
+   TABLE WRAPPER
+================================ */
+
+.showtime-table-wrapper{
+background:white;
+border-radius:12px;
+padding:10px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+
+/* TABLE */
+
+.showtime-table{
+margin:0;
+}
+
+.showtime-table thead{
+background:#f7f9fc;
+}
+
+.showtime-table th{
+padding:14px;
+font-size:13px;
+font-weight:600;
+color:#666;
+border-bottom:1px solid #eee;
+}
+
+.showtime-table td{
+padding:14px;
+vertical-align:middle;
+}
+
+.showtime-table tbody tr:hover{
+background:#f5f8fc;
+}
+
+
+/* MOVIE */
+
+.movie-cell{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.movie-cell img{
+width:38px;
+height:54px;
+object-fit:cover;
+border-radius:6px;
+}
+
+
+/* TIME */
+
+.showtime-time{
+font-weight:500;
+color:#333;
+}
+
+
+/* PRICE */
+
+.showtime-price{
+font-weight:600;
+color:#27ae60;
+}
+
+
+/* ACTION */
+
+.action-buttons{
+display:flex;
+gap:6px;
+}
+
+.btn-edit{
+background:#ffc107;
+border:none;
+padding:6px 12px;
+border-radius:6px;
+font-size:13px;
+}
+
+.btn-delete{
+background:#dc3545;
+color:white;
+border:none;
+padding:6px 12px;
+border-radius:6px;
+font-size:13px;
+}
+
+/* ===============================
+   SHOWTIME FORM
+================================ */
+
+.showtime-form-card{
+background:white;
+padding:30px;
+border-radius:12px;
+box-shadow:0 4px 14px rgba(0,0,0,0.08);
+max-width:700px;
+}
+
+/* ===============================
+   BACK BUTTON
+================================ */
+
+.back-link{
+margin-bottom:10px;
+}
+
+.back-link a{
+text-decoration:none;
+font-size:14px;
+color:#0B1F3A;
+font-weight:500;
+display:inline-flex;
+align-items:center;
+gap:5px;
+}
+
+.back-link a:hover{
+text-decoration:underline;
+}
+
+
+/* LABEL */
+
+.showtime-form-card label{
+font-weight:500;
+margin-bottom:6px;
+}
+
+
+/* INPUT */
+
+.showtime-form-card input,
+.showtime-form-card select{
+height:42px;
+border-radius:8px;
+}
+
+
+/* ACTIONS */
+
+.form-actions{
+margin-top:20px;
+display:flex;
+gap:10px;
+}
+
+
+/* SAVE BUTTON */
+
+.btn-save-showtime{
+background:#27ae60;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:8px;
+font-weight:600;
+cursor:pointer;
+}
+
+.btn-save-showtime:hover{
+background:#219150;
+}
+
+
+/* CANCEL */
+
+.btn-cancel{
+background:#ecf0f1;
+padding:10px 18px;
+border-radius:8px;
+text-decoration:none;
+color:#333;
+}
+
+
+/* =====================================================
+   PAYMENT INFO (BOOKING / ORDER LIST)
+===================================================== */
+
+.payment-info{
+display:flex;
+flex-direction:column;
+gap:6px;
+min-width:140px;
+}
+
+/* ===============================
+   PRICE
+=============================== */
+
+.payment-info .price{
+font-size:14px;
+font-weight:700;
+color:#0B1F3A;
+letter-spacing:0.3px;
+}
+
+/* ===============================
+   STATUS
+=============================== */
+
+.payment-info .status{
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+.payment-info .badge{
+font-size:11px;
+padding:4px 10px;
+border-radius:20px;
+font-weight:600;
+}
+
+/* ===============================
+   META (date + method)
+=============================== */
+
+.payment-info .meta{
+font-size:12px;
+color:#7a8a9a;
+line-height:1.3;
+}
+
+/* ===============================
+   HOVER EFFECT
+=============================== */
+
+.admin-table tbody tr{
+transition:all 0.2s ease;
+}
+
+.admin-table tbody tr:hover{
+background:#f7f9fc;
+}
+
+.admin-table tbody tr:hover .payment-info .price{
+color:#f39c12;
+}
+
+/* ===============================
+   BADGE COLOR (OVERRIDE BOOTSTRAP)
+=============================== */
+
+.badge.bg-success{
+background:#2ecc71 !important;
+}
+
+.badge.bg-warning{
+background:#f39c12 !important;
+color:white;
+}
+
+.badge.bg-danger{
+background:#e74c3c !important;
+}
+
+.badge.bg-secondary{
+background:#95a5a6 !important;
+}
+
+/* ===============================
+   PROMOTION PAGE
+================================ */
+
+.promo-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
+}
+
+.page-subtitle{
+font-size:13px;
+color:#7a8a9a;
+margin-top:-6px;
+}
+
+.btn-add-promo{
+background:#f39c12;
+color:#0B2341;
+padding:8px 16px;
+border-radius:8px;
+font-weight:600;
+text-decoration:none;
+}
+
+.btn-add-promo:hover{
+background:#e08b0c;
+}
+
+
+/* CARD */
+
+.promo-card{
+background:white;
+border-radius:12px;
+padding:15px;
+box-shadow:0 4px 14px rgba(0,0,0,0.08);
+}
+
+
+/* TABLE */
+
+.promo-table{
+width:100%;
+border-collapse:collapse;
+}
+
+.promo-table th{
+font-size:13px;
+color:#666;
+padding:14px;
+background:#f7f9fc;
+}
+
+.promo-table td{
+padding:14px;
+border-top:1px solid #eee;
+}
+
+.promo-table tr:hover{
+background:#f5f8fc;
+}
+
+
+/* CODE */
+
+.promo-code {
+    font-weight: bold;
+    color: #0B1F3A;
+}
+
+
+/* STATUS */
+
+.promo-active{
+background:#e6f7ee;
+color:#27ae60;
+padding:4px 10px;
+border-radius:6px;
+font-size:12px;
+}
+
+.promo-inactive{
+background:#ffeaea;
+color:#e74c3c;
+padding:4px 10px;
+border-radius:6px;
+font-size:12px;
+}
+
+
+/* ACTION */
+
+.promo-actions{
+display:flex;
+gap:8px;
+}
+
+.btn-toggle{
+background:#ffc107;
+padding:5px 10px;
+border-radius:6px;
+text-decoration:none;
+color:black;
+font-size:13px;
+}
+
+.btn-delete{
+background:#dc3545;
+padding:5px 10px;
+border-radius:6px;
+text-decoration:none;
+color:white;
+font-size:13px;
+}
+
+/* =====================================================
+   CINEMA ROOM LAYOUT
+   ===================================================== */
+.room-layout{
+display:flex;
+flex-direction:column;
+align-items:center;
+margin-top:30px;
+gap:10px;
+}
+
+
+/* =====================================================
+   SEAT BASE
+   ===================================================== */
+
+.seat {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    color: white;
+}
+
+/* hover nhẹ */
+.seat:hover {
+    transform: scale(1.08);
+}
+
+/* =====================================================
+   VIP SEAT
+   ===================================================== */
+
+.seat.vip {
+    background: #f39c12;
+}
+
+.seat.vip:hover {
+    background: #e67e22;
+}
+
+/* =====================================================
+   COUPLE SEAT (GHẾ ĐÔI)
+   ===================================================== */
+
+.seat.couple {
+    background: #e84393;
+    width: 80px;          
+    border-radius: 10px;
+}
+
+.seat.couple:hover {
+    background: #d6306f;
+}
+
+/* =====================================================
+   BOOKED SEAT
+   ===================================================== */
+
+.seat.booked {
+    background: #7f8c8d;
+    cursor: not-allowed;
+}
+
+/* =====================================================
+   SELECTED SEAT (USER)
+   ===================================================== */
+
+.seat.selected {
+    background: #2ecc71;
+}
+
+/* =====================================================
+   SCREEN
+   ===================================================== */
+
+.screen {
+    text-align: center;
+    font-weight: bold;
+    margin: 20px auto;
+    padding: 10px;
+    width: 60%;
+    background: #ddd;
+    border-radius: 10px;
+}
+
+/* =====================================================
+   LAYOUT
+   ===================================================== */
+
+.seat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.seat-row {
+    display: flex;
+    gap: 8px;
+}
+
+/* label A B C */
+.row-label {
+    width: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* ===== CONTAINER SHOWTIME ===== */
+.showtime-form-container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+/* ===== TITLE ===== */
+.form-title {
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 600;
+    color: #0B1F3A; /* màu bạn hay dùng */
+}
+
+/* ===== FORM GROUP ===== */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+/* ===== INPUT / SELECT ===== */
+.showtime-form input,
+.showtime-form select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.showtime-form input:focus,
+.showtime-form select:focus {
+    border-color: #0B1F3A;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(11,31,58,0.1);
+}
+
+/* ===== BUTTON ===== */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #0B1F3A;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-submit:hover {
+    background: #132f5e;
+}
+
+/* ===== COMBO PAGE ===== */
+
+.combo-container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* TITLE */
+.combo-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0B1F3A;
+}
+
+/* TABLE */
+.combo-table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* HEADER */
+.combo-table thead {
+    background: #f1f3f5;
+}
+
+.combo-table th {
+    color: #333;
+    font-weight: 600;
+}
+
+/* ROW */
+.combo-table tbody tr {
+    transition: 0.3s;
+}
+
+.combo-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+/* IMAGE */
+.combo-img {
+    width: 80px !important;
+    height: 80px !important;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #eee;
+    transition: 0.3s;
+}
+
+.combo-img:hover {
+    transform: scale(1.1);
+}
+
+/* NAME */
+.combo-name {
+    font-weight: 600;
+    color: #222;
+}
+
+/* PRICE */
+.combo-price {
+    color: #28a745;
+    font-weight: 600;
+}
+
+/* BADGE */
+.combo-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* BUTTON */
+.combo-btn {
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 13px;
+}
+
+.combo-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* ADD BUTTON */
+.btn-add-combo {
+    border-radius: 10px;
+    padding: 8px 16px;
+}

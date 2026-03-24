@@ -1,0 +1,61 @@
+<div th:fragment="modal">
+
+    <div class="modal fade" id="movieDetailModal" tabindex="-1">
+
+        <div class="modal-dialog modal-lg">
+
+            <div class="modal-content">
+
+                <!-- HEADER -->
+                <div class="modal-header">
+                    <h5 class="modal-title">Chi tiết phim</h5>
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- BODY -->
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <!-- POSTER -->
+                        <div class="col-md-4 text-center">
+                            <img id="modalPoster"
+                                 src=""
+                                 class="img-fluid rounded mb-3"
+                                 style="max-height:250px;">
+                        </div>
+
+                        <!-- INFO -->
+                        <div class="col-md-8">
+
+                            <h4 id="modalTitle" class="mb-3"></h4>
+
+                            <p><strong>Đạo diễn:</strong>
+                                <span id="modalDirector"></span>
+                            </p>
+
+                            <p><strong>Thời lượng:</strong>
+                                <span id="modalDuration"></span> phút
+                            </p>
+
+                            <p><strong>Trạng thái:</strong>
+                                <span id="modalStatus"></span>
+                            </p>
+
+                            <p><strong>Mô tả:</strong></p>
+                            <p id="modalDescription"></p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

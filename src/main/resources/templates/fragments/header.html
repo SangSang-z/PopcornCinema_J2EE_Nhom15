@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+    
 <body>
 
 <header th:fragment="header">
@@ -8,6 +9,7 @@
         <!-- LEFT -->
         <div class="nav-left">
             <img th:src="@{/images/logo.png}" class="logo-img">
+
             <ul class="nav-links">
                 <li><a href="#">Phim</a></li>
                 <li><a href="#">Sự kiện</a></li>
@@ -16,11 +18,55 @@
         </div>
 
         <!-- RIGHT -->
-        <div class="nav-auth">
-            <a href="#" class="login-btn">Đăng nhập</a>
-            <a href="#" class="signup-btn">Đăng ký</a>
+        <div class="nav-right">
+
+            <!-- CHƯA LOGIN -->
+            <div th:if="${session.user == null}" class="nav-auth">
+                <i class="fa-regular fa-user"></i>
+
+                <a th:href="@{/login}">Đăng nhập</a>
+                <span>/</span>
+                <a th:href="@{/register}">Đăng ký</a>
+            </div>
+
+            <!-- ĐÃ LOGIN -->
+            <div th:if="${session.user != null}" class="user-dropdown">
+
+                <!-- TOGGLE -->
+                <div class="user-toggle">
+                    <i class="fa-solid fa-user"></i>
+
+                    <span class="user-name"
+                          th:text="${session.user.fullName}">
+                    </span>
+
+                    <i class="fa-solid fa-caret-down"></i>
+                </div>
+
+                <!-- DROPDOWN -->
+                <div class="dropdown-menu">
+
+                    <a href="#">
+                        <i class="fa-regular fa-user"></i>
+                        Thông tin cá nhân
+                    </a>
+
+                    <a href="#">
+                        <i class="fa-solid fa-key"></i>
+                        Đổi mật khẩu
+                    </a>
+
+                    <a th:href="@{/logout}" class="logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Đăng xuất
+                    </a>
+
+                </div>
+
+            </div>
+
         </div>
-        
+
     </nav>
 </header>
 

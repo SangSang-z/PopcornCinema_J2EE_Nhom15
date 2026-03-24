@@ -1,0 +1,91 @@
+<div class="sidebar" th:fragment="sidebar">
+
+    <!-- LOGO -->
+    <div class="logo">
+        <img th:src="@{/images/logo.png}" alt="logo">
+    </div>
+
+    <!-- MENU -->
+    <ul class="menu">
+
+        <!-- DASHBOARD -->
+        <li class="menu-item"
+            th:classappend="${activePage == 'dashboard'} ? 'active'">
+            <a th:href="@{/admin/dashboard}">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Thống kê</span>
+            </a>
+        </li>
+
+        <!-- MOVIES -->
+        <li class="menu-item"
+            th:classappend="${activePage == 'movies'} ? 'active'">
+            <a th:href="@{/admin/movies}">
+                <i class="fa-solid fa-film"></i>
+                <span>Quản lý phim</span>
+            </a>
+        </li>
+
+        <!-- SHOWTIMES -->
+        <li class="menu-item"
+            th:classappend="${activePage == 'showtimes'} ? 'active'">
+            <a th:href="@{/admin/showtimes}">
+                <i class="fa-solid fa-clock"></i>
+                <span>Suất chiếu</span>
+            </a>
+        </li>
+
+        <!-- BOOKINGS -->
+        <li class="menu-item"
+            th:classappend="${activePage == 'bookings'} ? 'active'">
+            <a th:href="@{/admin/bookings}">
+                <i class="fa-solid fa-ticket"></i>
+                <span>Quản lý đặt vé</span>
+            </a>
+        </li>
+
+        <!-- COMBO -->
+        <li class="menu-item"
+            th:classappend="${activePage == 'combo'} ? 'active'">
+            <a th:href="@{/admin/combo}">
+                <i class="fa-solid fa-cookie"></i>
+                <span>Quản lý bắp nước</span>
+            </a>
+        </li>
+
+        <!-- USERS -->
+        <li class="menu-item"
+            th:classappend="${activePage == 'users'} ? 'active'">
+            <a th:href="@{/admin/users}">
+                <i class="fa-solid fa-user"></i>
+                <span>Người dùng</span>
+            </a>
+        </li>
+
+        <!-- PROMOTIONS -->
+        <li class="menu-item"
+            th:classappend="${activePage == 'promotions'} ? 'active'">
+            <a th:href="@{/admin/promotions}">
+                <i class="fa-solid fa-tag"></i>
+                <span>Khuyến mãi</span>
+            </a>
+        </li>
+
+        <!-- ROOMS -->
+        <li class="menu-item"
+            th:classappend="${activePage == 'rooms'} ? 'active'">
+            <a th:href="@{/admin/auditoriums}">
+                <i class="fa-solid fa-door-open"></i>
+                <span>Phòng chiếu</span>
+            </a>
+        </li>
+
+    </ul>
+
+    <!-- FOOTER -->
+    <div class="sidebar-footer">
+        <hr>
+        <p>ⓒ 2026 Popcorn Cinema</p>
+    </div>
+
+</div>
