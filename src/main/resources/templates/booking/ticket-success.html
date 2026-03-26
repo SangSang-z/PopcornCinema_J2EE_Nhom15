@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thông tin vé</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/checkout.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="booking-progress-wrapper">
+    <div class="booking-progress">
+        <div class="progress-step"><span>Chọn phim/ rạp/ suất</span></div>
+        <div class="progress-step"><span>Chọn ghế</span></div>
+        <div class="progress-step"><span>Bắp nước</span></div>
+        <div class="progress-step"><span>Thanh toán</span></div>
+        <div class="progress-step active"><span>Thông tin vé</span></div>
+    </div>
+</div>
+
+<div class="checkout-page">
+    <div class="checkout-container">
+        <div class="checkout-left">
+            <div class="checkout-card">
+                <h2>Thông tin vé</h2>
+
+                <div class="ticket-success-grid">
+                    <div class="ticket-success-poster">
+                        <img id="ticket-poster" src="" alt="Poster phim">
+                    </div>
+
+                    <div class="ticket-success-info">
+                        <h3 id="movie-title">Đang tải...</h3>
+                        <p><span id="movie-age-rating" class="age-badge">T16</span></p>
+
+                        <p id="booking-code">Mã đặt vé: ...</p>
+                        <p id="cinema-name">Rạp: ...</p>
+                        <p id="auditorium-name">Phòng: ...</p>
+                        <p id="showtime-text">Suất: ...</p>
+                        <p id="seats-text">Ghế: ...</p>
+                        <p id="combo-text">Combo: ...</p>
+
+                        <div class="ticket-divider"></div>
+
+                        <p id="seat-total">Tiền ghế: 0 đ</p>
+                        <p id="combo-total">Combo: 0 đ</p>
+                        <p id="discount-total">Giảm giá: 0 đ</p>
+                        <p class="ticket-total">Tổng cộng: <span id="grand-total">0 đ</span></p>
+                        <p id="payment-status">Trạng thái: Đã thanh toán</p>
+                    </div>
+                </div>
+
+                <div class="ticket-actions" style="margin-top:24px;">
+                    <a href="/" class="btn-next">Về trang chủ</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkout-right">
+            <div class="ticket-card">
+                <div class="ticket-info">
+                    <h3>Ghi chú</h3>
+                    <p>Vui lòng đến rạp đúng giờ để nhận vé và vào phòng chiếu.</p>
+                    <p>Mang theo mã đặt vé khi cần đối chiếu.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/ticket-success.js(v=${#dates.createNow().time})}"></script>
+</body>
+</html>

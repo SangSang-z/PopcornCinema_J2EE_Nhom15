@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Xuất vé thất bại</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/checkout.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="booking-progress-wrapper">
+    <div class="booking-progress">
+        <div class="progress-step"><span>Chọn phim/ rạp/ suất</span></div>
+        <div class="progress-step"><span>Chọn ghế</span></div>
+        <div class="progress-step"><span>Bắp nước</span></div>
+        <div class="progress-step active"><span>Thanh toán</span></div>
+        <div class="progress-step"><span>Thông tin vé</span></div>
+    </div>
+</div>
+
+<div class="checkout-page">
+    <div class="failed-box">
+        <h2>Xuất vé thất bại</h2>
+        <p>Trường hợp giao dịch chưa thành công, quý khách vui lòng không thực hiện giao dịch online lần nữa và tới rạp Popcorn Cinema gần nhất để mua vé.</p>
+        <a href="/" class="btn-next">Quay Về Trang Chủ</a>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

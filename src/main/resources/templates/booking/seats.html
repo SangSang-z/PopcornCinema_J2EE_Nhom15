@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chọn ghế</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/seats.css}">
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<div class="booking-progress-wrapper">
+    <div class="booking-progress">
+        <div class="progress-step">
+            <span>Chọn phim/ rạp/ suất</span>
+        </div>
+
+        <div class="progress-step active">
+            <span>Chọn ghế</span>
+        </div>
+
+        <div class="progress-step">
+            <span>Bắp nước</span>
+        </div>
+
+        <div class="progress-step">
+            <span>Thanh toán</span>
+        </div>
+
+        <div class="progress-step">
+            <span>Thông tin vé</span>
+        </div>
+    </div>
+</div>
+
+<div class="seat-page">
+    <div class="seat-container">
+        <div class="seat-left">
+            <div class="seat-topbar">
+                <h2>Chọn ghế</h2>
+                <div class="countdown">Thời gian giữ ghế: <span id="countdown">05:00</span></div>
+            </div>
+
+            <div class="screen">Màn hình</div>
+
+            <div id="seat-map" class="seat-map"></div>
+
+            <div class="seat-legend">
+            <div class="legend-item">
+                <span class="legend-box available"></span>
+                <span>Ghế có sẵn</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-box selected"></span>
+                <span>Ghế đang chọn</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-box sold"></span>
+                <span>Ghế đã bán</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-box couple"></span>
+                <span>Ghế đôi VIP</span>
+            </div>
+        </div>
+        </div>
+
+        <div class="seat-right">
+            <div class="ticket-card">
+                <img id="ticket-poster" src="" alt="Poster phim">
+
+                <div class="ticket-info">
+                    <h3 id="ticket-title">Đang tải...</h3>
+                    <p><span id="ticket-age-rating" class="age-badge">T16</span></p>
+                    <p id="ticket-cinema">Rạp: ...</p>
+                    <p id="ticket-auditorium">Phòng: ...</p>
+                    <p id="ticket-datetime">Suất: ...</p>
+                    <p id="ticket-seats">Ghế: Chưa chọn</p>
+                    <p id="ticket-price">Giá ghế: 0 đ</p>
+                    <p class="ticket-total">Tổng cộng: <span id="ticket-total">0 đ</span></p>
+                </div>
+
+                <div class="ticket-actions">
+                    <a href="#" id="exit-booking-btn" class="btn-back">Quay lại</a>
+                    <button id="continue-btn" class="btn-next" disabled>Tiếp tục</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<script th:src="@{/js/seats.js}"></script>
+</body>
+</html>

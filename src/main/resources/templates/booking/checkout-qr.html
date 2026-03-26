@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>QR Thanh toán</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/checkout.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="booking-progress-wrapper">
+    <div class="booking-progress">
+        <div class="progress-step"><span>Chọn phim/ rạp/ suất</span></div>
+        <div class="progress-step"><span>Chọn ghế</span></div>
+        <div class="progress-step"><span>Bắp nước</span></div>
+        <div class="progress-step active"><span>Thanh toán</span></div>
+        <div class="progress-step"><span>Thông tin vé</span></div>
+    </div>
+</div>
+
+<div class="checkout-page">
+    <div class="checkout-container">
+        <div class="checkout-left">
+            <div class="checkout-card qr-card">
+                <h3>Phương thức thanh toán</h3>
+                <p>Thanh toán mã QR với ứng dụng di động</p>
+
+                <div class="qr-layout">
+                    <img id="qr-image" src="" alt="QR thanh toán" class="qr-image">
+
+                    <div class="qr-guide">
+                        <p><b>Hướng dẫn quét mã QR</b></p>
+                        <p>Mở ứng dụng trên điện thoại</p>
+                        <p>Tới ứng dụng ngân hàng hoặc ví điện tử</p>
+                        <p>Quét mã QR ở trang này và thanh toán</p>
+                    </div>
+                </div>
+
+                <button id="back-to-checkout-btn" class="btn-next">Trở lại giao dịch trước</button>
+            </div>
+        </div>
+
+        <div class="checkout-right">
+            <div class="ticket-card">
+                <div class="ticket-info">
+                    <p>Thông tin đơn hàng: <span id="order-code">---</span></p>
+                    <p>Số tiền thanh toán: <b id="payment-amount">0 đ</b></p>
+                    <p>Thời hạn giao dịch: <span id="payment-countdown">00:00</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<script th:src="@{/js/checkout-qr.js}"></script>
+</body>
+</html>

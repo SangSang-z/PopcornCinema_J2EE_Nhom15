@@ -1,0 +1,381 @@
+/* ===================== */
+/* PAGE WRAPPER */
+/* ===================== */
+
+.movie-detail{
+    width:1200px;
+    margin:auto;
+}
+/* ===================== */
+/* BANNER */
+/* ===================== */
+
+.movie-banner{
+    width:100%;
+    height:320px;
+    overflow:hidden;
+    position:relative;
+}
+
+.movie-banner img{
+    position:absolute;
+    top:45%;
+    left:50%;
+    min-width:100%;
+    min-height:100%;
+    width:auto;
+    height:auto;
+    transform:translate(-50%, -50%);
+    display:block;
+}
+
+.movie-banner::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:100px;
+    background:linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,0.6));
+}
+
+/* ===================== */
+/* TOP LAYOUT */
+/* ===================== */
+
+.movie-main{
+    display:grid;
+    grid-template-columns:minmax(0, 1fr) 280px;
+    column-gap:60px;
+    align-items:start;
+}
+.movie-content{
+    min-width:0;
+}
+.movie-left{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    gap:40px;
+    align-items:start;
+}
+
+/* ===================== */
+/* POSTER */
+/* ===================== */
+
+.movie-poster{
+    margin-top:-40px; /* chỉ poster đè banner nhẹ */
+    position:relative;
+    z-index:2;
+}
+
+.movie-poster img{
+    width:260px;
+    display:block;
+    border-radius:10px;
+    box-shadow:0 30px 30px rgba(0,0,0,0.7);
+}
+
+/* ===================== */
+/* MOVIE INFO */
+/* ===================== */
+
+.movie-info{
+    max-width:520px;
+    padding-top:0;
+}
+
+.movie-info h1{
+    font-size:34px;
+    margin-bottom:15px;
+}
+
+.movie-meta{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin-bottom:12px;
+}
+
+.rating{
+    margin-bottom:14px;
+}
+
+.movie-desc p{
+    margin:5px 0;
+}
+
+.tag{
+    background:#ffb400;
+    padding:4px 8px;
+    border-radius:4px;
+    color:black;
+    font-weight:bold;
+}
+
+/* ===================== */
+/* SIDEBAR */
+/* ===================== */
+
+.movie-sidebar{
+    width:280px;
+    padding-top:20px;
+    overflow:visible;
+    align-self:start;
+}
+
+.sidebar-title{
+    margin-bottom:30px;
+    font-size:20px;
+}
+
+.side-movie{
+    margin-bottom:25px;
+}
+
+.movie-card{
+    position:relative;
+    width:290px;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.movie-card img{
+    width:100%;
+    height:240px;
+    object-fit:cover;
+    display:block;
+    border-radius:10px;
+    transition:transform .3s;
+}
+
+.movie-card:hover img{
+    transform:scale(1.05);
+}
+
+.rating-badge{
+    position:absolute;
+    right:10px;
+    bottom:10px;
+    font-weight:bold;
+    color:white;
+    font-size:16px;
+}
+
+.age-badge{
+    position:absolute;
+    left:10px;
+    bottom:10px;
+    background:#ffb400;
+    color:black;
+    padding:3px 6px;
+    border-radius:4px;
+    font-size:12px;
+}
+
+.movie-name{
+    margin-top:8px;
+    font-size:14px;
+}
+
+/* ===================== */
+/* DESCRIPTION */
+/* ===================== */
+
+.movie-description{
+    margin-top:38px;
+    margin-bottom:30px;
+}
+/* ===================== */
+/* SHOWTIME */
+/* ===================== */
+
+.showtime{
+    margin-top: 24px;
+}
+
+.showtime h3{
+    margin-bottom: 18px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.showtime-toolbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+.showtime-days{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: nowrap;
+}
+
+.day-btn{
+    background: transparent;
+    color: #fff;
+    border: none;
+    width: 86px;
+    min-width: 86px;
+    min-height: 72px;
+    padding: 10px 8px;
+    cursor: pointer;
+    transition: .2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.day-btn.active{
+    background: #ffb400;
+    color: #000;
+}
+
+.day-btn:hover{
+    transform: translateY(-2px);
+}
+
+.day-top{
+    display: block;
+    font-size: 15px;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.day-bottom{
+    display: block;
+    font-size: 14px;
+    line-height: 1.2;
+    opacity: .95;
+    font-weight: 600;
+}
+
+.showtime-filters{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.filter-select{
+    background: #0f2f5a;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+    width: 150px;
+    height: 42px;
+    padding: 0 12px;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+}
+
+.filter-select option{
+    color: #000;
+}
+
+.showtime-divider{
+    width: 100%;
+    margin-top: 18px;
+    margin-bottom: 24px;
+    height: 2px;
+    background: rgba(255,255,255,0.7);
+}
+
+.cinema-block{
+    margin-bottom: 28px;
+}
+
+.cinema-block h4{
+    margin-bottom: 14px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.time-list{
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.time-list button{
+    background: #122f55;
+    border: none;
+    padding: 12px 20px;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: .2s;
+}
+
+.time-list button:hover{
+    transform: translateY(-2px);
+}
+
+/* ===================== */
+/* XEM THEM */
+/* ===================== */
+.sidebar-more{
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.see-more-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    min-width: 100px;
+    height: 44px;
+    padding: 0 16px;
+    background: #0f2f5a;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.see-more-arrow{
+    font-size: 18px;
+    line-height: 1;
+}
+
+.see-more-btn:hover{
+    background: #f6b500;
+    color: #000;
+    border-color: #f6b500;
+}re-btn:hover{
+    transform: translateY(-2px);
+    opacity: 0.95;
+}
+/* ===================== */
+/* CHUYEN POSTER */
+/* ===================== */
+.side-movie-link{
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.side-movie-link:hover .movie-card{
+    transform: translateY(-2px);
+    transition: 0.2s;
+}
+/* ===================== */
+/* SEET */
+/* ===================== */
+.showtime-link{
+    text-decoration:none;
+}

@@ -1,0 +1,271 @@
+.booking-progress-wrapper{
+    background:#082a56;
+    padding:22px 0 28px;
+    margin-bottom:24px;
+}
+
+.booking-progress{
+    width:1200px;
+    margin:0 auto;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    position:relative;
+    gap:0;
+}
+
+.booking-progress::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:0;
+    width:760px;
+    height:4px;
+    background:rgba(255,255,255,0.20);
+    border-radius:999px;
+}
+
+.progress-step{
+    position:relative;
+    flex:0 0 auto;
+    min-width:152px;
+    text-align:center;
+    color:rgba(255,255,255,0.45);
+    font-size:17px;
+    font-weight:500;
+    padding-bottom:18px;
+    z-index:1;
+}
+
+.progress-step span{
+    display:inline-block;
+    white-space:nowrap;
+}
+
+.progress-step.active{
+    color:#ffffff;
+    font-weight:700;
+}
+
+.progress-step.active::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:0;
+    width:100%;
+    max-width:130px;
+    height:4px;
+    background:#f2a7b5;
+    border-radius:999px;
+}
+
+.combo-page{
+    background:#06224a;
+    min-height:100vh;
+    padding:30px 0 60px;
+    color:#fff;
+}
+
+.combo-container{
+    width:1200px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1fr 340px;
+    gap:32px;
+    align-items:start;
+}
+
+.combo-left{
+    background:#082a56;
+    padding:28px;
+    border-radius:10px;
+}
+
+.combo-topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:24px;
+}
+
+.combo-topbar h2{
+    margin:0;
+    font-size:28px;
+    font-weight:700;
+}
+
+.countdown{
+    font-size:16px;
+    font-weight:600;
+    opacity:.95;
+}
+
+.combo-table{
+    background:rgba(255,255,255,0.02);
+    border-radius:8px;
+    overflow:hidden;
+}
+
+.combo-header{
+    display:grid;
+    grid-template-columns:1.8fr 0.8fr 0.8fr;
+    padding:16px 18px;
+    font-size:14px;
+    font-weight:700;
+    color:#d5e5ff;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+.combo-row{
+    display:grid;
+    grid-template-columns:1.8fr 0.8fr 0.8fr;
+    gap:0;
+    padding:18px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    align-items:start;
+}
+
+.combo-row:last-child{
+    border-bottom:none;
+}
+
+.combo-name{
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:6px;
+    color:#fff;
+}
+
+.combo-desc{
+    font-size:14px;
+    line-height:1.5;
+    color:rgba(255,255,255,0.82);
+}
+
+.combo-price{
+    font-size:15px;
+    font-weight:700;
+    color:#fff;
+    padding-top:2px;
+}
+
+.combo-qty{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    justify-content:flex-start;
+}
+
+.qty-btn{
+    width:30px;
+    height:30px;
+    border:none;
+    border-radius:50%;
+    background:#173a6a;
+    color:#fff;
+    font-size:18px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.qty-btn:hover{
+    opacity:.9;
+    transform:translateY(-1px);
+}
+
+.qty-value{
+    min-width:20px;
+    text-align:center;
+    font-size:15px;
+    font-weight:700;
+    color:#fff;
+}
+
+.combo-right{
+    position:sticky;
+    top:20px;
+}
+
+.ticket-card{
+    background:#082a56;
+    padding:22px;
+    border-radius:10px;
+}
+
+.ticket-card img{
+    width:100%;
+    border-radius:10px;
+    margin-bottom:18px;
+    object-fit:cover;
+}
+
+.ticket-info h3{
+    margin:0 0 12px;
+    font-size:24px;
+    font-weight:700;
+}
+
+.ticket-info p{
+    margin:10px 0;
+    line-height:1.5;
+    font-size:16px;
+}
+
+.age-badge{
+    display:inline-block;
+    background:#f6b500;
+    color:#000;
+    font-weight:700;
+    padding:5px 10px;
+    border-radius:4px;
+}
+
+.ticket-divider{
+    margin:16px 0;
+    height:1px;
+    background:rgba(255,255,255,0.1);
+}
+
+.ticket-total{
+    margin-top:18px;
+    font-size:20px;
+    font-weight:700;
+}
+
+.ticket-actions{
+    margin-top:24px;
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+}
+
+.btn-back,
+.btn-next{
+    border:none;
+    text-decoration:none;
+    text-align:center;
+    cursor:pointer;
+    padding:11px 18px;
+    border-radius:6px;
+    font-weight:700;
+    font-size:15px;
+}
+
+.btn-back{
+    background:transparent;
+    color:#fff;
+}
+
+.btn-next{
+    background:#f6b500;
+    color:#000;
+}
+
+@media (max-width: 1280px){
+    .booking-progress,
+    .combo-container{
+        width:95%;
+    }
+}

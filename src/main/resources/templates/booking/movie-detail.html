@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Movie Detail</title>
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/movie-detail.css}">
+</head>
+
+<body>
+
+<div th:replace="fragments/header :: header"></div>
+
+<!-- Banner -->
+<div class="movie-banner">
+    <img id="movie-banner-img" src="" alt="banner">
+</div>
+
+<div class="container movie-detail">
+
+    <div class="movie-main">
+
+    <div class="movie-content">
+
+        <!-- LEFT SIDE -->
+        <div class="movie-left">
+
+            <!-- Poster -->
+            <div class="movie-poster">
+                <img id="movie-poster-img" src="" alt="Poster phim">
+            </div>
+
+            <!-- Movie info -->
+            <div class="movie-info">
+
+                <h1 id="movie-title">Đang tải...</h1>
+
+                <div class="movie-meta">
+                    <span class="tag" id="movie-age-rating">T18</span>
+                    <span id="movie-duration">0 phút</span>
+                </div>
+
+                <p class="rating" id="movie-rating">⭐ Đang cập nhật</p>
+
+                <div class="movie-desc">
+                    <p><b>Ngôn ngữ:</b> <span id="movie-language"></span></p>
+                    <p><b>Thể loại:</b> <span id="movie-genres"></span></p>
+                    <p><b>Đạo diễn:</b> <span id="movie-director"></span></p>
+                    <p><b>Diễn viên:</b> <span id="movie-actors"></span></p>
+                    <p><b>Khởi chiếu:</b> <span id="movie-release-date"></span></p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Description -->
+        <div class="movie-description">
+            <h3>Nội dung phim</h3>
+            <p id="movie-description-text">
+                Đang tải nội dung phim...
+            </p>
+        </div>
+
+        <!-- Showtime -->
+        <div class="showtime">
+            <h3>Lịch chiếu</h3>
+
+            <div class="showtime-toolbar">
+                <div class="showtime-days" id="showtime-days"></div>
+
+                <div class="showtime-filters">
+                    <select id="city-filter" class="filter-select">
+                        <option value="">Toàn quốc</option>
+                    </select>
+
+                    <select id="cinema-filter" class="filter-select">
+                        <option value="">Tất cả rạp</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="showtime-divider"></div>
+
+            <div id="showtime-content"></div>
+        </div>
+
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <div class="movie-sidebar">
+        <h3 class="sidebar-title">Phim đang chiếu</h3>
+
+        <div id="related-movies-container"></div>
+
+        <div class="sidebar-more">
+            <a href="/movies" class="see-more-btn">
+                <span>Xem thêm</span>
+                <span class="see-more-arrow">›</span>
+            </a>
+        </div>
+</div>
+
+</div>
+
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<script th:src="@{/js/movie-detail.js}"></script>
+
+</body>
+</html>

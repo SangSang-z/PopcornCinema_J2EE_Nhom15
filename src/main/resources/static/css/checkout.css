@@ -1,0 +1,195 @@
+.booking-progress-wrapper{
+    background:#082a56;
+    padding:22px 0 28px;
+    margin-bottom:24px;
+}
+
+.booking-progress{
+    width:1200px;
+    margin:0 auto;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    position:relative;
+    gap:0;
+}
+
+.booking-progress::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:0;
+    width:760px;
+    height:4px;
+    background:rgba(255,255,255,0.20);
+    border-radius:999px;
+}
+
+.progress-step{
+    position:relative;
+    min-width:152px;
+    text-align:center;
+    color:rgba(255,255,255,0.45);
+    font-size:17px;
+    font-weight:500;
+    padding-bottom:18px;
+}
+
+.progress-step.active{
+    color:#fff;
+    font-weight:700;
+}
+
+.progress-step.active::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:0;
+    width:100%;
+    max-width:130px;
+    height:4px;
+    background:#f2a7b5;
+    border-radius:999px;
+}
+
+.checkout-page{
+    background:#06224a;
+    min-height:100vh;
+    padding:30px 0 60px;
+    color:#fff;
+}
+
+.checkout-container{
+    width:1200px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:1fr 340px;
+    gap:32px;
+    align-items:start;
+}
+
+.checkout-card,
+.ticket-card,
+.failed-box{
+    background:#082a56;
+    padding:22px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+.checkout-card h3{
+    margin-top:0;
+}
+
+.promo-row{
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+.promo-select{
+    flex:1;
+    height:44px;
+    border:1px solid rgba(255,255,255,0.18);
+    background:#0f2f5a;
+    color:#fff;
+    padding:0 14px;
+    border-radius:6px;
+}
+
+.apply-btn,.btn-next{
+    background:#f6b500;
+    color:#000;
+    border:none;
+    border-radius:20px;
+    padding:10px 20px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.btn-back{
+    color:#fff;
+    text-decoration:none;
+}
+
+.payment-method{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.ticket-card img{
+    width:100%;
+    border-radius:10px;
+    margin-bottom:18px;
+}
+
+.age-badge{
+    display:inline-block;
+    background:#f6b500;
+    color:#000;
+    font-weight:700;
+    padding:5px 10px;
+    border-radius:4px;
+}
+
+.ticket-divider{
+    margin:16px 0;
+    height:1px;
+    background:rgba(255,255,255,0.1);
+}
+
+.ticket-actions{
+    margin-top:24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.qr-layout{
+    display:flex;
+    gap:22px;
+    align-items:flex-start;
+}
+
+.qr-image{
+    width:180px;
+    height:180px;
+    object-fit:contain;
+    background:#fff;
+    padding:8px;
+    border-radius:6px;
+}
+
+.qr-guide p{
+    margin:6px 0;
+}
+
+.failed-box{
+    width:900px;
+    margin:0 auto;
+    text-align:center;
+    padding:48px 32px;
+}
+
+
+
+
+
+.ticket-success-grid{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    gap:24px;
+    align-items:start;
+}
+
+.ticket-success-poster img{
+    width:100%;
+    border-radius:10px;
+}
+
+.ticket-success-info p{
+    margin:8px 0;
+}

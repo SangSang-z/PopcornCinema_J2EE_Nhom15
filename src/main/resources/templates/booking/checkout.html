@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thanh toán</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/checkout.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="booking-progress-wrapper">
+    <div class="booking-progress">
+        <div class="progress-step"><span>Chọn phim/ rạp/ suất</span></div>
+        <div class="progress-step"><span>Chọn ghế</span></div>
+        <div class="progress-step"><span>Bắp nước</span></div>
+        <div class="progress-step active"><span>Thanh toán</span></div>
+        <div class="progress-step"><span>Thông tin vé</span></div>
+    </div>
+</div>
+
+<div class="checkout-page">
+    <div class="checkout-container">
+        <div class="checkout-left">
+            <div class="checkout-card">
+                <h3>Khuyến mãi</h3>
+
+                <div class="promo-row">
+                    <select id="promotion-select" class="promo-select">
+                        <option value="">Khuyến mãi của bạn</option>
+                    </select>
+                    <button id="apply-promo-btn" class="apply-btn">Áp dụng</button>
+                </div>
+            </div>
+
+            <div class="checkout-card">
+                <h3>Phương thức thanh toán</h3>
+                <label class="payment-method">
+                    <input type="radio" name="paymentMethod" value="QR" checked>
+                    Thanh toán mã QR với ứng dụng di động
+                </label>
+            </div>
+        </div>
+
+        <div class="checkout-right">
+            <div class="ticket-card">
+                <img id="ticket-poster" src="" alt="Poster phim">
+
+                <div class="ticket-info">
+                    <h3 id="ticket-title">Đang tải...</h3>
+                    <p><span id="ticket-age-rating" class="age-badge">T16</span></p>
+                    <p id="ticket-cinema">Rạp: ...</p>
+                    <p id="ticket-auditorium">Phòng: ...</p>
+                    <p id="ticket-datetime">Suất: ...</p>
+                    <p id="ticket-seats">Ghế: ...</p>
+
+                    <div class="ticket-divider"></div>
+
+                    <p id="ticket-seat-total">Tiền ghế: 0 đ</p>
+                    <p id="ticket-combo-total">Combo: 0 đ</p>
+                    <p id="ticket-discount">Giảm giá: 0 đ</p>
+                    <p class="ticket-total">Tổng cộng: <span id="ticket-total">0 đ</span></p>
+                </div>
+
+                <div class="ticket-actions">
+                    <a id="back-btn" href="#" class="btn-back">Quay lại</a>
+                    <button id="continue-btn" class="btn-next">Tiếp tục</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+<script th:src="@{/js/checkout.js}"></script>
+</body>
+</html>
