@@ -67,7 +67,15 @@
             <h3>Lịch chiếu</h3>
 
             <div class="showtime-toolbar">
-                <div class="showtime-days" id="showtime-days"></div>
+                <div class="showtime-days-wrapper">
+
+                    <button id="showtime-prev" class="showtime-nav-btn" type="button">‹</button>
+
+                    <div id="showtime-days" class="showtime-days"></div>
+
+                    <button id="showtime-next" class="showtime-nav-btn" type="button">›</button>
+
+                </div>
 
                 <div class="showtime-filters">
                     <select id="city-filter" class="filter-select">
@@ -108,7 +116,7 @@
 
 <div th:replace="fragments/footer :: footer"></div>
 
-<script th:src="@{/js/movie-detail.js}"></script>
+<script th:src="@{/js/movie-detail.js}" defer></script>
 
 </body>
 </html>

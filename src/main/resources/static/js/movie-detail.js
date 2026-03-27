@@ -1,6 +1,11 @@
 let movieDetailData = null;
 let selectedCity = "";
 let selectedCinemaId = "";
+let selectedDate = null;
+
+let allShowDates = [];
+let visibleStartIndex = 0;
+const VISIBLE_DAYS = 5;
 
 const currentUserId = 1;
 const HOLD_EXPIRES_AT_KEY = "holdExpiresAt";
@@ -73,6 +78,7 @@ function renderMovieInfo(movie) {
     setText("movie-actors", actors || "Đang cập nhật");
 
     const poster = movie.posterUrl || "";
+    const banner = movie.bannerUrl || "";
     const posterImg = document.getElementById("movie-poster-img");
     const bannerImg = document.getElementById("movie-banner-img");
 
@@ -82,7 +88,7 @@ function renderMovieInfo(movie) {
     }
 
     if (bannerImg) {
-        bannerImg.src = poster;
+        bannerImg.src = movie.bannerUrl || movie.posterUrl;
         bannerImg.alt = movie.title || "Banner phim";
     }
 }
@@ -132,35 +138,37 @@ function renderShowDates(showDates) {
         return;
     }
 
-    showDates.forEach((showDate, index) => {
-        const date = new Date(showDate.date);
-        const activeClass = index === 0 ? "active" : "";
+    const uniqueDates = [...new Set(showDates.map(item => item.date))];
 
-        const dayButton = `
-            <button class="day-btn ${activeClass}" data-date="${showDate.date}">
-                <span class="day-top">${getVietnameseWeekday(date)}</span>
-                <span class="day-bottom">${formatDateShort(showDate.date)}</span>
-            </button>
-        `;
-        daysContainer.insertAdjacentHTML("beforeend", dayButton);
+    allShowDates = uniqueDates.map(dateStr => {
+        const d = new Date(dateStr);
+        const dayNames = [
+            "Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư",
+            "Thứ Năm", "Thứ Sáu", "Thứ Bảy"
+        ];
+
+        const dd = String(d.getDate()).padStart(2, "0");
+        const mm = String(d.getMonth() + 1).padStart(2, "0");
+
+        return {
+            date: dateStr,
+            dayName: dayNames[d.getDay()],
+            dayValue: `${dd}-${mm}`
+        };
     });
 
-    renderShowtimeContent(showDates[0]);
+    if (allShowDates.length > 0 && !selectedDate) {
+        selectedDate = allShowDates[0].date;
+    }
 
-    const dayButtons = daysContainer.querySelectorAll(".day-btn");
-    dayButtons.forEach(button => {
-        button.addEventListener("click", () => {
-            dayButtons.forEach(btn => btn.classList.remove("active"));
-            button.classList.add("active");
+    ensureSelectedDateVisible();
+    bindShowtimeNav();
+    renderShowtimeDays();
 
-            const selectedDate = button.getAttribute("data-date");
-            const selectedShowDate = showDates.find(item => item.date === selectedDate);
-
-            if (selectedShowDate) {
-                renderShowtimeContent(selectedShowDate);
-            }
-        });
-    });
+    const selectedShowDate = showDates.find(d => d.date === selectedDate);
+    if (selectedShowDate) {
+        renderShowtimeContent(selectedShowDate);
+    }
 }
 
 function renderShowtimeContent(showDate) {
@@ -350,11 +358,11 @@ function bindFilters() {
 }
 
 function rerenderCurrentShowDate() {
-    const activeButton = document.querySelector("#showtime-days .day-btn.active");
-    if (!activeButton || !movieDetailData) return;
+    if (!selectedDate || !movieDetailData) return;
 
-    const selectedDate = activeButton.getAttribute("data-date");
-    const selectedShowDate = (movieDetailData.showDates || []).find(item => item.date === selectedDate);
+    const selectedShowDate = movieDetailData.showDates.find(
+        item => item.date === selectedDate
+    );
 
     if (selectedShowDate) {
         renderShowtimeContent(selectedShowDate);
@@ -398,5 +406,92 @@ async function startNewBookingFlow(newShowtimeId) {
     } finally {
         clearBookingSession();
         window.location.href = `/seats?showtimeId=${newShowtimeId}`;
+    }
+}
+
+function renderShowtimeDays() {
+    const daysContainer = document.getElementById("showtime-days");
+    const prevBtn = document.getElementById("showtime-prev");
+    const nextBtn = document.getElementById("showtime-next");
+
+    if (!daysContainer) return;
+
+    daysContainer.innerHTML = "";
+
+    const visibleDates = allShowDates.slice(visibleStartIndex, visibleStartIndex + VISIBLE_DAYS);
+
+    visibleDates.forEach(dateItem => {
+        const btn = document.createElement("button");
+        btn.className = "day-btn";
+
+        btn.setAttribute("data-date", dateItem.date); // ✅ QUAN TRỌNG
+
+        if (selectedDate === dateItem.date) {
+            btn.classList.add("active");
+        }
+
+        btn.innerHTML = `
+            <span class="day-top">${dateItem.dayName}</span>
+            <span class="day-bottom">${dateItem.dayValue}</span>
+        `;
+
+        btn.addEventListener("click", () => {
+            selectedDate = dateItem.date;
+            renderShowtimeDays();
+
+            const selectedShowDate = movieDetailData.showDates.find(
+                d => d.date === selectedDate
+            );
+
+            if (selectedShowDate) {
+                renderShowtimeContent(selectedShowDate);
+            }
+        });
+
+        daysContainer.appendChild(btn);
+    });
+
+    if (prevBtn) {
+        prevBtn.style.display = visibleStartIndex > 0 ? "inline-flex" : "none";
+    }
+
+    if (nextBtn) {
+        nextBtn.style.display =
+            visibleStartIndex + VISIBLE_DAYS < allShowDates.length ? "inline-flex" : "none";
+    }
+}
+
+function bindShowtimeNav() {
+    const prevBtn = document.getElementById("showtime-prev");
+    const nextBtn = document.getElementById("showtime-next");
+
+    if (prevBtn) {
+        prevBtn.onclick = () => {
+            if (visibleStartIndex > 0) {
+                visibleStartIndex--;
+                renderShowtimeDays();
+            }
+        };
+    }
+
+    if (nextBtn) {
+        nextBtn.onclick = () => {
+            if (visibleStartIndex + VISIBLE_DAYS < allShowDates.length) {
+                visibleStartIndex++;
+                renderShowtimeDays();
+            }
+        };
+    }
+}
+
+function ensureSelectedDateVisible() {
+    const selectedIndex = allShowDates.findIndex(item => item.date === selectedDate);
+
+    if (selectedIndex === -1) return;
+
+    if (selectedIndex < visibleStartIndex) {
+        visibleStartIndex = selectedIndex;
+    } else if (selectedIndex >= visibleStartIndex + VISIBLE_DAYS) {
+        visibleStartIndex = selectedIndex - VISIBLE_DAYS + 1;
     }
 }

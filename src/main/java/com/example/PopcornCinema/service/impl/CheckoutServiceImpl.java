@@ -2,12 +2,12 @@ package com.example.PopcornCinema.service.impl;
 
 import com.example.PopcornCinema.dto.CheckoutSummaryResponse;
 import com.example.PopcornCinema.entity.Promotion;
-import com.example.PopcornCinema.respository.BookingComboRepository;
-import com.example.PopcornCinema.respository.PromotionRepository;
-import com.example.PopcornCinema.respository.SeatHoldRepository;
-import com.example.PopcornCinema.respository.ShowtimeRepository;
-import com.example.PopcornCinema.respository.projection.CheckoutShowtimeProjection;
-import com.example.PopcornCinema.respository.projection.HeldSeatSummaryProjection;
+import com.example.PopcornCinema.repository.BookingComboRepository;
+import com.example.PopcornCinema.repository.PromotionRepository;
+import com.example.PopcornCinema.repository.SeatHoldRepository;
+import com.example.PopcornCinema.repository.ShowtimeRepository;
+import com.example.PopcornCinema.repository.projection.CheckoutShowtimeProjection;
+import com.example.PopcornCinema.repository.projection.HeldSeatSummaryProjection;
 import com.example.PopcornCinema.service.CheckoutService;
 import org.springframework.stereotype.Service;
 
@@ -97,13 +97,30 @@ public class CheckoutServiceImpl implements CheckoutService {
             return BigDecimal.ZERO;
         }
 
+        java.time.LocalDateTime now = java.time.LocalDateTime.now();
+
+        if (promotion.getStartDate() != null && now.isBefore(promotion.getStartDate())) {
+            return BigDecimal.ZERO;
+        }
+
+        if (promotion.getEndDate() != null && now.isAfter(promotion.getEndDate())) {
+            return BigDecimal.ZERO;
+        }
+
+        if (promotion.getMinOrderValue() != null) {
+            BigDecimal minOrderValue = promotion.getMinOrderValue();
+            if (subtotal.compareTo(minOrderValue) < 0) {
+                throw new RuntimeException("Đơn hàng chưa đạt giá trị tối thiểu " + minOrderValue + " VND");
+            }
+        }
+
         BigDecimal discount = BigDecimal.ZERO;
 
         if (promotion.getDiscountAmount() != null) {
             discount = promotion.getDiscountAmount();
         } else if (promotion.getDiscountPercent() != null) {
             discount = subtotal.multiply(promotion.getDiscountPercent())
-                    .divide(BigDecimal.valueOf(100));
+                    .divide(BigDecimal.valueOf(100), 0, java.math.RoundingMode.HALF_UP);
         }
 
         if (discount.compareTo(subtotal) > 0) {

@@ -33,6 +33,10 @@ public class Payment {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking_id", insertable = false, updatable = false)
+    private Booking booking;
+
     public Payment() {
     }
 
@@ -44,13 +48,16 @@ public class Payment {
     public String getTransactionRef() { return transactionRef; }
     public LocalDateTime getPaidAt() { return paidAt; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public Booking getBooking() { return booking; }
 
     public void setId(Long id) { this.id = id; }
     public void setBookingId(Long bookingId) { this.bookingId = bookingId; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
     public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public void setAmount(double amount) { this.amount = BigDecimal.valueOf(amount); }
     public void setStatus(String status) { this.status = status; }
     public void setTransactionRef(String transactionRef) { this.transactionRef = transactionRef; }
     public void setPaidAt(LocalDateTime paidAt) { this.paidAt = paidAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setBooking(Booking booking) { this.booking = booking; this.bookingId = booking != null ? booking.getId() : null; }
 }

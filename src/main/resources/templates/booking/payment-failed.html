@@ -4,6 +4,7 @@
     <title>Xuất vé thất bại</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" th:href="@{/css/checkout.css}">
+    <link rel="stylesheet" th:href="@{/css/payment-failed.css}">
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
@@ -18,11 +19,17 @@
     </div>
 </div>
 
-<div class="checkout-page">
-    <div class="failed-box">
+<div class="payment-failed-page">
+    <div class="payment-failed-card">
         <h2>Xuất vé thất bại</h2>
-        <p>Trường hợp giao dịch chưa thành công, quý khách vui lòng không thực hiện giao dịch online lần nữa và tới rạp Popcorn Cinema gần nhất để mua vé.</p>
-        <a href="/" class="btn-next">Quay Về Trang Chủ</a>
+        <p>
+            Trường hợp giao dịch chưa thành công, quý khách vui lòng không thực hiện
+            giao dịch online lần nữa và tới rạp Popcorn Cinema gần nhất để mua vé.
+        </p>
+
+        <div class="payment-failed-actions">
+            <a th:href="@{/home}" class="btn-next failed-home-btn">Quay Về Trang Chủ</a>
+        </div>
     </div>
 </div>
 

@@ -1,7 +1,7 @@
 package com.example.PopcornCinema.service.impl;
 
 import com.example.PopcornCinema.dto.ComboDto;
-import com.example.PopcornCinema.respository.ComboRepository;
+import com.example.PopcornCinema.repository.ComboRepository;
 import com.example.PopcornCinema.service.ComboService;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +14,27 @@ public class ComboServiceImpl implements ComboService {
 
     public ComboServiceImpl(ComboRepository comboRepository) {
         this.comboRepository = comboRepository;
+    }
+
+
+    @Override
+    public List<com.example.PopcornCinema.entity.Combo> getAll() {
+        return comboRepository.findAll();
+    }
+
+    @Override
+    public void save(com.example.PopcornCinema.entity.Combo combo) {
+        comboRepository.save(combo);
+    }
+
+    @Override
+    public void delete(Long id) {
+        comboRepository.deleteById(id);
+    }
+
+    @Override
+    public com.example.PopcornCinema.entity.Combo getById(Long id) {
+        return comboRepository.findById(id).orElse(null);
     }
 
     @Override

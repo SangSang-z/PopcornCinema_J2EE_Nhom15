@@ -1,4 +1,3 @@
-const currentUserId = 1;
 
 const HOLD_EXPIRES_AT_KEY = "holdExpiresAt";
 const SELECTED_SEATS_KEY = "selectedSeatsData";
@@ -11,8 +10,13 @@ let comboData = [];
 let comboPageData = null;
 let holdExpiresAt = null;
 
+function getCurrentUserId() {
+    return Number(document.getElementById("app-user")?.value || 0);
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     const showtimeId = getShowtimeIdFromUrl();
+    const currentUserId = getCurrentUserId();
 
     console.log("payment page showtimeId =", showtimeId);
     console.log("current url =", window.location.href);
@@ -22,9 +26,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+        if (!currentUserId) {
+        alert("Không lấy được userId, vui lòng đăng nhập lại");
+        return;
+    }
+
     try {
         const [seatMapResponse, comboResponse, selectedComboResponse] = await Promise.all([
-            fetch(`/api/showtimes/${showtimeId}/seat-map?userId=1`),
+            fetch(`/api/showtimes/${showtimeId}/seat-map?userId=${currentUserId}`),
             fetch(`/api/combos`),
             fetch(`/api/showtimes/${showtimeId}/booking-combos?userId=${currentUserId}`)
         ]);
@@ -126,6 +135,7 @@ function bindQtyEvents() {
 }
 
 async function changeQuantity(comboId, delta) {
+    const currentUserId = getCurrentUserId();
     const combo = comboData.find(item => item.id === comboId);
     if (!combo) return;
 
@@ -251,6 +261,7 @@ function formatHourMinute(dateTimeString) {
 }
 
 async function saveComboSelectionToBackend() {
+    const currentUserId = getCurrentUserId();
     const showtimeId = getShowtimeIdFromUrl();
 
     const items = comboData

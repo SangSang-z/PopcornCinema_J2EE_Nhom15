@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <div th:replace="~{admin/fragments/admin-header :: header}"></div>
+
+    <div class="admin-layout">
+
+        <!-- SIDEBAR -->
+        <div th:replace="~{admin/fragments/admin-sidebar :: sidebar}"></div>
+
+        <!-- CONTENT -->
+        <div class="admin-content">
+
+            <!-- TITLE -->
+            <h1 class="page-title">
+                Dashboard
+                <span class="page-subtitle">Tổng quan hệ thống</span>
+            </h1>
+
+            <!-- STATS -->
+            <div class="stats">
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-dollar-sign"></i></div>
+                    <div class="stat-info">
+                        <h4>Tổng doanh thu</h4>
+                        <p th:text="${totalRevenue}">0</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-ticket"></i></div>
+                    <div class="stat-info">
+                        <h4>Vé đã bán</h4>
+                        <p th:text="${totalTickets}">0</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-user"></i></div>
+                    <div class="stat-info">
+                        <h4>Người dùng mới</h4>
+                        <p th:text="${newUsers}">0</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+                    <div class="stat-info">
+                        <h4>Đơn hàng</h4>
+                        <p th:text="${totalOrders}">0</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- GRID -->
+            <div class="dashboard-grid">
+
+                <!-- LEFT -->
+                <div class="left-dashboard">
+
+                    <!-- CHART -->
+                    <div class="chart-box">
+                        <div class="box-header">
+                            <h3>Doanh thu 7 ngày qua</h3>
+                            <span class="tag">7 ngày</span>
+                        </div>
+
+                        <canvas id="revenueChart"></canvas>
+
+                        <div class="chart-legend">
+                            <span class="dot"></span> Doanh thu (VND)
+                        </div>
+                    </div>
+
+                    <!-- TOP MOVIES -->
+                    <div class="top-box">
+                        <div class="box-header">
+                            <h3>Top phim bán chạy</h3>
+                        </div>
+
+                        <ul class="top-movies">
+                            <li th:each="movie, stat : ${topMovies}">
+                                <span class="rank"
+                                      th:text="${stat.index + 1}">1</span>
+
+                                <img class="movie-small"
+                                     th:src="@{${movie.posterUrl}}">
+
+                                <span th:text="${movie.title}">Tên phim</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT -->
+                <div class="right-panel">
+
+                    <div class="box-header">
+                        <h3>Phim đang chiếu</h3>
+                    </div>
+
+                    <ul class="now-showing">
+                        <li th:each="movie : ${nowShowingMovies}">
+                            <img class="movie-small"
+                                 th:src="@{${movie.posterUrl}}">
+                            <span th:text="${movie.title}">Tên phim</span>
+                        </li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:src="@{/js/script.js}"></script>
+
+</body>
+</html>

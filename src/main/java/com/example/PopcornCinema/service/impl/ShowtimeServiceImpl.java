@@ -2,10 +2,10 @@ package com.example.PopcornCinema.service.impl;
 
 import com.example.PopcornCinema.dto.SeatItemDto;
 import com.example.PopcornCinema.dto.SeatMapResponse;
-import com.example.PopcornCinema.respository.ShowtimeRepository;
-import com.example.PopcornCinema.respository.TicketRepository;
-import com.example.PopcornCinema.respository.projection.SeatProjection;
-import com.example.PopcornCinema.respository.projection.ShowtimeSeatMapProjection;
+import com.example.PopcornCinema.repository.ShowtimeRepository;
+import com.example.PopcornCinema.repository.TicketRepository;
+import com.example.PopcornCinema.repository.projection.SeatProjection;
+import com.example.PopcornCinema.repository.projection.ShowtimeSeatMapProjection;
 import com.example.PopcornCinema.service.SeatHoldService;
 import com.example.PopcornCinema.service.ShowtimeService;
 import org.springframework.stereotype.Service;

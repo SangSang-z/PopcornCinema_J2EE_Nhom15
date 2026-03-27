@@ -1,0 +1,59 @@
+<div th:fragment="header">
+
+<!-- FONT AWESOME -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<div class="admin-header">
+
+    <div class="header-left">
+
+        <!-- SEARCH chỉ hiện ở Dashboard -->
+        <div class="admin-search" th:if="${activePage == 'dashboard'}">
+
+            <i class="fa-solid fa-search"></i>
+
+            <input type="text" id="adminSearch" placeholder="Tìm kiếm chức năng...">
+
+            <div class="search-result" id="searchResult"></div>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <div class="user-menu">
+
+            <div class="user-trigger">
+
+                <img th:src="@{/images/account.png}" class="avatar">
+
+                <span>Admin</span>
+
+                <i class="fa-solid fa-chevron-down"></i>
+
+            </div>
+
+            <div class="user-dropdown" id="userDropdown">
+
+                <a href="#">
+                    <i class="fa-solid fa-gear"></i>
+                    Cài đặt
+                </a>
+
+                <a href="/logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Đăng xuất
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>

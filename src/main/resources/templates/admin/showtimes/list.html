@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Danh sách suất chiếu</title>
+
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div th:replace="~{admin/fragments/admin-header :: header}"></div>
+
+<div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <div th:replace="~{admin/fragments/admin-sidebar :: sidebar}"></div>
+
+    <!-- CONTENT -->
+    <div class="admin-content">
+
+        <div class="showtime-header">
+
+            <div class="showtime-title">
+                <h2>Danh sách suất chiếu</h2>
+                <p>Quản lý lịch chiếu phim trong hệ thống</p>
+            </div>
+
+            <a th:href="@{/admin/showtimes/create}" class="btn btn-primary">
+                + Thêm suất chiếu
+            </a>
+
+        </div>
+
+        <div class="card shadow-sm mt-3">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Phim</th>
+                    <th>Phòng</th>
+                    <th>Thời gian</th>
+                    <th>Giá vé</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="s : ${showtimes}">
+
+                    <td th:text="${s.id}"></td>
+
+                    <!-- MOVIE -->
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+
+                            <img th:src="${s.movie != null && s.movie.posterUrl != null ? s.movie.posterUrl : '/images/no-image.png'}"
+                                 width="50"
+                                 style="border-radius:6px">
+
+                            <span th:text="${s.movie != null ? s.movie.title : 'N/A'}"></span>
+
+                        </div>
+                    </td>
+
+                    <!-- AUDITORIUM -->
+                    <td th:text="${s.auditorium != null ? s.auditorium.name : 'N/A'}"></td>
+
+                    <!-- TIME -->
+                    <td th:text="${s.startTime != null ? #temporals.format(s.startTime,'dd/MM/yyyy HH:mm') : 'N/A'}"></td>
+
+                    <!-- PRICE -->
+                    <td th:text="${s.basePrice != null ? #numbers.formatDecimal(s.basePrice,0,'COMMA',0,'POINT') + ' VND' : '0 VND'}"></td>
+
+                    <!-- ACTION -->
+                    <td>
+                        <a th:href="@{/admin/showtimes/edit/{id}(id=${s.id})}"
+                           class="btn btn-warning btn-sm">
+                            Sửa
+                        </a>
+
+                        <a th:href="@{/admin/showtimes/delete/{id}(id=${s.id})}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Bạn có chắc muốn xóa suất chiếu này?')">
+                            Xóa
+                        </a>
+                    </td>
+
+                </tr>
+
+                <!-- EMPTY -->
+                <tr th:if="${showtimes == null || #lists.isEmpty(showtimes)}">
+                    <td colspan="6" class="text-center text-muted">
+                        Không có suất chiếu nào
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>

@@ -10,6 +10,7 @@ public class PaymentTransactionResponse {
     private String qrContent;
     private String qrImageUrl;
     private LocalDateTime expiresAt;
+    private Long showtimeId;
 
     public String getOrderCode() { return orderCode; }
     public BigDecimal getAmount() { return amount; }
@@ -17,6 +18,8 @@ public class PaymentTransactionResponse {
     public String getQrContent() { return qrContent; }
     public String getQrImageUrl() { return qrImageUrl; }
     public LocalDateTime getExpiresAt() { return expiresAt; }
+    public Long getShowtimeId() {return showtimeId;}
+
 
     public void setOrderCode(String orderCode) { this.orderCode = orderCode; }
     public void setAmount(BigDecimal amount) { this.amount = amount; }
@@ -24,4 +27,6 @@ public class PaymentTransactionResponse {
     public void setQrContent(String qrContent) { this.qrContent = qrContent; }
     public void setQrImageUrl(String qrImageUrl) { this.qrImageUrl = qrImageUrl; }
     public void setExpiresAt(LocalDateTime expiresAt) { this.expiresAt = expiresAt; }
+    public void setShowtimeId(Long showtimeId) {this.showtimeId = showtimeId;}
+
 }

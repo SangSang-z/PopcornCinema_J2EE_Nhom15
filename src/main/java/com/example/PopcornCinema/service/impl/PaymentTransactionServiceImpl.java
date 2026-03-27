@@ -5,7 +5,9 @@ import com.example.PopcornCinema.dto.CreatePaymentTransactionRequest;
 import com.example.PopcornCinema.dto.PaymentTransactionResponse;
 import com.example.PopcornCinema.dto.PaymentTransactionStatusResponse;
 import com.example.PopcornCinema.entity.PaymentTransaction;
-import com.example.PopcornCinema.respository.PaymentTransactionRepository;
+import com.example.PopcornCinema.repository.BookingComboRepository;
+import com.example.PopcornCinema.repository.PaymentTransactionRepository;
+import com.example.PopcornCinema.repository.SeatHoldRepository;
 import com.example.PopcornCinema.service.BookingFinalizeService;
 import com.example.PopcornCinema.service.CheckoutService;
 import com.example.PopcornCinema.service.PaymentTransactionService;
@@ -22,13 +24,16 @@ import java.util.UUID;
 @Service
 public class PaymentTransactionServiceImpl implements PaymentTransactionService {
 
-    private static final String STATUS_PENDING = "PENDING";
-    private static final String STATUS_PAID = "PAID";
-    private static final String STATUS_CANCELLED = "CANCELLED";
-    private static final String STATUS_EXPIRED = "EXPIRED";
+    public static final String STATUS_PENDING = "PENDING";
+    public static final String STATUS_PENDING_CONFIRMATION = "PENDING_CONFIRMATION";
+    public static final String STATUS_PAID = "PAID";
+    public static final String STATUS_CANCELLED = "CANCELLED";
+    public static final String STATUS_EXPIRED = "EXPIRED";
+    public static final String STATUS_REJECTED = "REJECTED";
+    public static final String STATUS_FAILED = "FAILED";
 
-    private static final String BANK_ID = "MB";
-    private static final String ACCOUNT_NO = "123456789";
+    private static final String BANK_ID = "VCB";
+    private static final String ACCOUNT_NO = "1030472376";
     private static final String ACCOUNT_NAME = "POPCORN CINEMA";
     private static final String QR_TEMPLATE = "compact2";
     private static final long EXPIRE_MINUTES = 5;
@@ -36,13 +41,19 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
     private final PaymentTransactionRepository paymentTransactionRepository;
     private final CheckoutService checkoutService;
     private final BookingFinalizeService bookingFinalizeService;
+    private final SeatHoldRepository seatHoldRepository;
+    private final BookingComboRepository bookingComboRepository;
 
     public PaymentTransactionServiceImpl(PaymentTransactionRepository paymentTransactionRepository,
                                          CheckoutService checkoutService,
-                                         BookingFinalizeService bookingFinalizeService) {
+                                         BookingFinalizeService bookingFinalizeService,
+                                         SeatHoldRepository seatHoldRepository,
+                                         BookingComboRepository bookingComboRepository) {
         this.paymentTransactionRepository = paymentTransactionRepository;
         this.checkoutService = checkoutService;
         this.bookingFinalizeService = bookingFinalizeService;
+        this.seatHoldRepository = seatHoldRepository;
+        this.bookingComboRepository = bookingComboRepository;
     }
 
     @Override
@@ -50,10 +61,14 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
     public PaymentTransactionResponse createTransaction(Long showtimeId, CreatePaymentTransactionRequest request) {
         Long userId = request.getUserId();
 
-        List<PaymentTransaction> pendingTransactions =
-                paymentTransactionRepository.findByUserIdAndShowtimeIdAndStatus(userId, showtimeId, STATUS_PENDING);
+        List<PaymentTransaction> activeTransactions =
+                paymentTransactionRepository.findByUserIdAndShowtimeIdAndStatuses(
+                        userId,
+                        showtimeId,
+                        List.of(STATUS_PENDING, STATUS_PENDING_CONFIRMATION)
+                );
 
-        for (PaymentTransaction existingTx : pendingTransactions) {
+        for (PaymentTransaction existingTx : activeTransactions) {
             if (existingTx.getExpiresAt() != null && existingTx.getExpiresAt().isAfter(LocalDateTime.now())) {
                 existingTx.setStatus(STATUS_CANCELLED);
                 paymentTransactionRepository.save(existingTx);
@@ -100,29 +115,82 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
         PaymentTransaction tx = getTransactionOrThrow(orderCode);
         markExpiredIfNeeded(tx);
 
-        if (STATUS_PENDING.equals(tx.getStatus())) {
+        if (STATUS_PENDING.equals(tx.getStatus()) || STATUS_PENDING_CONFIRMATION.equals(tx.getStatus())) {
             tx.setStatus(STATUS_CANCELLED);
             paymentTransactionRepository.save(tx);
+
+            cleanupTempData(tx);
         }
     }
 
     @Override
     @Transactional
-    public void mockPaid(String orderCode) {
+    public void markSubmitted(String orderCode) {
         PaymentTransaction tx = getTransactionOrThrow(orderCode);
         markExpiredIfNeeded(tx);
 
         if (STATUS_EXPIRED.equals(tx.getStatus()) || STATUS_CANCELLED.equals(tx.getStatus())) {
-            throw new RuntimeException("Giao dịch đã hết hạn hoặc đã bị hủy, không thể xác nhận thanh toán");
+            throw new RuntimeException("Giao dịch đã hết hạn hoặc đã bị hủy");
         }
 
-        if (!STATUS_PAID.equals(tx.getStatus())) {
-            tx.setStatus(STATUS_PAID);
-            tx.setPaidAt(LocalDateTime.now());
+        if (STATUS_PAID.equals(tx.getStatus())) {
+            return;
+        }
+
+        if (!STATUS_PENDING.equals(tx.getStatus())) {
+            throw new RuntimeException("Chỉ giao dịch đang chờ mới được báo đã thanh toán");
+        }
+
+        tx.setStatus(STATUS_PENDING_CONFIRMATION);
+        paymentTransactionRepository.save(tx);
+    }
+
+    @Override
+    @Transactional
+    public void confirmByAdmin(String orderCode) {
+        PaymentTransaction tx = getTransactionOrThrow(orderCode);
+        markExpiredIfNeeded(tx);
+
+        if (STATUS_EXPIRED.equals(tx.getStatus()) || STATUS_CANCELLED.equals(tx.getStatus())) {
+            throw new RuntimeException("Giao dịch đã hết hạn hoặc đã bị hủy");
+        }
+
+        if (!STATUS_PENDING_CONFIRMATION.equals(tx.getStatus())) {
+            throw new RuntimeException("Chỉ xác nhận được giao dịch đang chờ admin duyệt");
+        }
+
+        tx.setStatus(STATUS_PAID);
+        tx.setPaidAt(LocalDateTime.now());
+        paymentTransactionRepository.save(tx);
+
+        try {
+            bookingFinalizeService.finalizeSuccessfulPayment(orderCode);
+        } catch (Exception ex) {
+            tx.setStatus(STATUS_FAILED);
             paymentTransactionRepository.save(tx);
+            throw new RuntimeException("Xác nhận được thanh toán nhưng tạo booking thất bại: " + ex.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional
+    public void rejectByAdmin(String orderCode) {
+        PaymentTransaction tx = getTransactionOrThrow(orderCode);
+        markExpiredIfNeeded(tx);
+
+        if (!STATUS_PENDING_CONFIRMATION.equals(tx.getStatus())) {
+            throw new RuntimeException("Chỉ từ chối được giao dịch đang chờ admin duyệt");
         }
 
-        bookingFinalizeService.finalizeSuccessfulPayment(orderCode);
+        tx.setStatus(STATUS_REJECTED);
+        paymentTransactionRepository.save(tx);
+
+        cleanupTempData(tx);
+    }
+
+    private void cleanupTempData(PaymentTransaction tx) {
+        seatHoldRepository.deleteByShowtimeIdAndUserId(tx.getShowtimeId(), tx.getUserId());
+        bookingComboRepository.deleteByShowtimeIdAndUserIdAndBookingIdIsNull(tx.getShowtimeId(), tx.getUserId());
     }
 
     private PaymentTransaction getTransactionOrThrow(String orderCode) {
@@ -131,11 +199,12 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
     }
 
     private void markExpiredIfNeeded(PaymentTransaction tx) {
-        if (STATUS_PENDING.equals(tx.getStatus())
+        if ((STATUS_PENDING.equals(tx.getStatus()) || STATUS_PENDING_CONFIRMATION.equals(tx.getStatus()))
                 && tx.getExpiresAt() != null
                 && tx.getExpiresAt().isBefore(LocalDateTime.now())) {
             tx.setStatus(STATUS_EXPIRED);
             paymentTransactionRepository.save(tx);
+            cleanupTempData(tx);
         }
     }
 
@@ -147,24 +216,21 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
         response.setQrContent(tx.getQrContent());
         response.setQrImageUrl(tx.getQrImageUrl());
         response.setExpiresAt(tx.getExpiresAt());
+        response.setShowtimeId(tx.getShowtimeId());
         return response;
     }
 
     private String generateOrderCode() {
-        return "PC" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
+        return "ORD" + UUID.randomUUID().toString().replace("-", "").substring(0, 10).toUpperCase();
     }
 
     private String buildTransferContent(String orderCode, BigDecimal amount) {
-        return "BANK=" + BANK_ID
-                + ";ACC=" + ACCOUNT_NO
-                + ";NAME=" + ACCOUNT_NAME
-                + ";AMOUNT=" + normalizeAmount(amount)
-                + ";DESC=" + orderCode;
+        return "CK " + orderCode;
     }
 
     private String buildVietQrImageUrl(String orderCode, BigDecimal amount) {
-        String encodedAccountName = URLEncoder.encode(ACCOUNT_NAME, StandardCharsets.UTF_8);
         String encodedOrderCode = URLEncoder.encode(orderCode, StandardCharsets.UTF_8);
+        String encodedAccountName = URLEncoder.encode(ACCOUNT_NAME, StandardCharsets.UTF_8);
 
         return "https://img.vietqr.io/image/"
                 + BANK_ID + "-" + ACCOUNT_NO + "-" + QR_TEMPLATE + ".png"

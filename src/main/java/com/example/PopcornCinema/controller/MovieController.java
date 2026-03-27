@@ -5,7 +5,7 @@ import com.example.PopcornCinema.dto.MovieDetailResponse;
 import com.example.PopcornCinema.service.MovieService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-// import com.example.PopcornCinema.dto.CinemaDto;
+
 import java.util.List;
 
 @RestController

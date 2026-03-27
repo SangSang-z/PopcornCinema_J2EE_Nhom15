@@ -1,7 +1,7 @@
 package com.example.PopcornCinema.service.impl;
 
 import com.example.PopcornCinema.entity.SeatHold;
-import com.example.PopcornCinema.respository.SeatHoldRepository;
+import com.example.PopcornCinema.repository.SeatHoldRepository;
 import com.example.PopcornCinema.service.SeatHoldService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;

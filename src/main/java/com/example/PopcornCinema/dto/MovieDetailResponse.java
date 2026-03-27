@@ -15,6 +15,7 @@ public class MovieDetailResponse {
     private String language;
     private String ageRating;
     private String status;
+    private String bannerUrl;
 
     private List<GenreDto> genres = new ArrayList<>();
     private List<ActorDto> actors = new ArrayList<>();
@@ -80,6 +81,10 @@ public class MovieDetailResponse {
         return relatedMovies;
     }
 
+    public String getBannerUrl() {
+        return bannerUrl;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -134,5 +139,9 @@ public class MovieDetailResponse {
 
     public void setRelatedMovies(List<RelatedMovieDto> relatedMovies) {
         this.relatedMovies = relatedMovies;
+    }
+
+    public void setBannerUrl(String bannerUrl) {
+        this.bannerUrl = bannerUrl;
     }
 }

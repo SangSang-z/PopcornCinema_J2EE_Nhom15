@@ -36,6 +36,12 @@ public class Promotion {
     @Column(nullable = false, length = 20)
     private String status;
 
+    @Column(name = "code", length = 50)
+    private String code;
+
+    @Column(name = "min_order_value", precision = 10, scale = 2)
+    private BigDecimal minOrderValue;
+
     public Promotion() {
     }
 
@@ -48,14 +54,23 @@ public class Promotion {
     public LocalDateTime getStartDate() { return startDate; }
     public LocalDateTime getEndDate() { return endDate; }
     public String getStatus() { return status; }
+    public String getCode() { return code; }
+    public BigDecimal getMinOrderValue() { return minOrderValue; }
 
     public void setId(Long id) { this.id = id; }
     public void setTitle(String title) { this.title = title; }
     public void setDescription(String description) { this.description = description; }
     public void setPosterUrl(String posterUrl) { this.posterUrl = posterUrl; }
     public void setDiscountPercent(BigDecimal discountPercent) { this.discountPercent = discountPercent; }
+    public void setDiscountPercent(int discountPercent) { this.discountPercent = BigDecimal.valueOf(discountPercent); }
     public void setDiscountAmount(BigDecimal discountAmount) { this.discountAmount = discountAmount; }
     public void setStartDate(LocalDateTime startDate) { this.startDate = startDate; }
     public void setEndDate(LocalDateTime endDate) { this.endDate = endDate; }
     public void setStatus(String status) { this.status = status; }
+    public void setCode(String code) { this.code = code; if ((this.title == null || this.title.isBlank()) && code != null) this.title = code; }
+    public void setMinOrderValue(BigDecimal minOrderValue) { this.minOrderValue = minOrderValue; }
+    public void setMinOrderValue(double minOrderValue) { this.minOrderValue = BigDecimal.valueOf(minOrderValue); }
+
+    public boolean isActive() { return "ACTIVE".equalsIgnoreCase(status); }
+    public void setActive(boolean active) { this.status = active ? "ACTIVE" : "INACTIVE"; }
 }

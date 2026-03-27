@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Popcorn Cinema</title>
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+
+    <!-- ICON -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div th:replace="~{fragments/header :: header}"></div>
+
+<!-- HERO -->
+<section class="hero-slider">
+    <div class="slides">
+
+        <div class="slide active">
+            <img th:src="@{/images/banner1.jpg}">
+        </div>
+
+        <div class="slide">
+            <img th:src="@{/images/banner2.jpg}">
+        </div>
+
+    </div>
+</section>
+
+<!-- ================= MOVIES ================= -->
+<section class="movie-section">
+
+    <h2>Phim Đang Chiếu</h2>
+
+    <div class="movie-list">
+
+        <!-- 🔥 DYNAMIC MOVIE -->
+        <div class="movie-card"
+             th:each="movie : ${movies}">
+
+            <div class="movie-poster">
+
+                <!-- POSTER -->
+                <img th:src="${movie.posterUrl != null ? movie.posterUrl : '/images/no-image.png'}">
+
+                <!-- HOT -->
+                <span class="badge-hot" th:if="${movie.hot == true}">
+                    HOT
+                </span>
+
+                <!-- OVERLAY -->
+                <div class="overlay">
+                    <a th:href="@{/booking/{id}(id=${movie.id})}">
+                        <button class="btn-book">
+                            Đặt vé ngay
+                        </button>
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="movie-info">
+
+                <!-- TITLE -->
+                <h3 th:text="${movie.title}"></h3>
+
+                <!-- DURATION -->
+                <p class="movie-duration"
+                   th:text="${movie.duration + ' phút'}">
+                </p>
+
+                <!-- SHOWTIMES -->
+                <div class="showtimes">
+
+                    <span th:each="st : ${movie.showtimes}"
+                          th:text="${#temporals.format(st.startTime,'HH:mm')}">
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= PROMOTION ================= -->
+<section class="promotion-section">
+
+    <h2>Khuyến Mãi / Sự Kiện</h2>
+
+    <div class="promotion-list">
+
+        <div class="promo-card">
+            <img th:src="@{/images/khuyenmai2.jpg}">
+            <div class="promo-content">
+                <h3>Ưu đãi ngày lễ</h3>
+                <p>Giảm 20% giá vé</p>
+            </div>
+        </div>
+
+        <div class="promo-card">
+            <img th:src="@{/images/khuyenmai1.jpg}">
+            <div class="promo-content">
+                <h3>Combo bắp nước</h3>
+                <p>Tặng combo miễn phí</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FOOTER -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/slider.js}"></script>
+
+</body>
+</html>

@@ -39,9 +39,9 @@ public class PaymentTransactionController {
         return ResponseEntity.ok(Map.of("message", "Đã hủy giao dịch"));
     }
 
-    @PostMapping("/payment-transactions/{orderCode}/mock-paid")
-    public ResponseEntity<?> mockPaid(@PathVariable String orderCode) {
-        paymentTransactionService.mockPaid(orderCode);
-        return ResponseEntity.ok(Map.of("message", "Đã giả lập thanh toán thành công"));
+    @PostMapping("/payment-transactions/{orderCode}/mark-submitted")
+    public ResponseEntity<?> markSubmitted(@PathVariable String orderCode) {
+        paymentTransactionService.markSubmitted(orderCode);
+        return ResponseEntity.ok(Map.of("message", "Đã ghi nhận người dùng báo đã thanh toán"));
     }
 }

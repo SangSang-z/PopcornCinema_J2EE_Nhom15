@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<section class="auth-section">
+
+    <div class="auth-card">
+
+        <h2>Đăng nhập</h2>
+
+        <p class="auth-subtitle">
+            Popcorn Cinema rất vui được gặp lại bạn.<br>
+            Đăng nhập để tiếp tục hành trình điện ảnh nhé!
+        </p>
+
+        <!-- 🔥 ERROR -->
+        <p class="error-msg"
+           th:if="${error}"
+           th:text="${error}">
+        </p>
+
+        <form th:action="@{/login}" method="post">
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email"
+                       name="email"
+                       th:value="${param.email}"
+                       placeholder="Nhập email của bạn"
+                       required>
+            </div>
+
+            <div class="form-group password-group">
+                <label>Mật khẩu</label>
+                <input type="password"
+                       id="password"
+                       name="password"
+                       placeholder="Nhập mật khẩu"
+                       required>
+                <i class="fa-solid fa-eye-slash toggle-password"
+                   onclick="togglePassword()"></i>
+            </div>
+
+            <div class="login-options">
+                <label class="remember-me">
+                    <input type="checkbox" name="rememberMe">
+                    Nhớ tài khoản của tôi
+                </label>
+
+                <a th:href="@{/forgot-password}" class="forgot-password">
+                    Quên mật khẩu?
+                </a>
+            </div>
+
+            <button type="submit" class="btn-login">
+                Đăng nhập
+            </button>
+
+        </form>
+
+        <p class="register-link">
+            Nếu bạn chưa là thành viên của Popcorn Cinema?
+            <a href="/register">Tham gia ngay</a>
+        </p>
+
+    </div>
+
+</section>
+
+<script>
+    function togglePassword(){
+        let input = document.getElementById("password");
+        input.type = (input.type === "password") ? "text" : "password";
+    }
+</script>
+
+</body>
+</html>

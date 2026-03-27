@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public class PromotionDto {
     private Long id;
+    private String code;
     private String title;
     private String description;
     private BigDecimal discountPercent;
@@ -12,9 +13,10 @@ public class PromotionDto {
     public PromotionDto() {
     }
 
-    public PromotionDto(Long id, String title, String description,
+    public PromotionDto(Long id, String code, String title, String description,
                         BigDecimal discountPercent, BigDecimal discountAmount) {
         this.id = id;
+        this.code = code;
         this.title = title;
         this.description = description;
         this.discountPercent = discountPercent;
@@ -22,12 +24,14 @@ public class PromotionDto {
     }
 
     public Long getId() { return id; }
+    public String getCode() { return code; }
     public String getTitle() { return title; }
     public String getDescription() { return description; }
     public BigDecimal getDiscountPercent() { return discountPercent; }
     public BigDecimal getDiscountAmount() { return discountAmount; }
 
     public void setId(Long id) { this.id = id; }
+    public void setCode(String code) { this.code = code; }
     public void setTitle(String title) { this.title = title; }
     public void setDescription(String description) { this.description = description; }
     public void setDiscountPercent(BigDecimal discountPercent) { this.discountPercent = discountPercent; }

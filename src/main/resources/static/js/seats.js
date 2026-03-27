@@ -5,9 +5,19 @@ const CURRENT_SHOWTIME_KEY = "currentBookingShowtimeId";
 const COMBO_TOTAL_KEY = "comboTotal";
 const GRAND_TOTAL_KEY = "grandTotal";
 
-//test hold ghế
-const currentUserId = 1;
-//const currentUserId = 2;
+function clearBookingSession() {
+    sessionStorage.removeItem(HOLD_EXPIRES_AT_KEY);
+    sessionStorage.removeItem(SELECTED_SEATS_KEY);
+    sessionStorage.removeItem(SEAT_TOTAL_KEY);
+    sessionStorage.removeItem(COMBO_TOTAL_KEY);
+    sessionStorage.removeItem(GRAND_TOTAL_KEY);
+    sessionStorage.removeItem(CURRENT_SHOWTIME_KEY);
+}
+
+function getCurrentUserId() {
+    return Number(document.getElementById("app-user")?.value || 0);
+}
+
 
 let selectedSeats = [];
 let seatPageData = null;
@@ -15,6 +25,7 @@ let holdExpiresAt = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
     const showtimeId = getShowtimeIdFromUrl();
+    const currentUserId = getCurrentUserId();
     sessionStorage.setItem(CURRENT_SHOWTIME_KEY, String(showtimeId));
 
     if (!showtimeId) {
@@ -22,7 +33,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    if (!currentUserId) {
+        alert("Không lấy được userId, vui lòng đăng nhập lại");
+        return;
+    }
+
+
     try {
+        
         const response = await fetch(`/api/showtimes/${showtimeId}/seat-map?userId=${currentUserId}`);
         if (!response.ok) {
             throw new Error("Không tải được sơ đồ ghế");
@@ -38,15 +56,50 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const continueBtn = document.getElementById("continue-btn");
         if (continueBtn) {
-            continueBtn.addEventListener("click", () => {
-                if (!selectedSeats.length) {
-                    alert("Vui lòng chọn ít nhất 1 ghế");
-                    return;
-                }
+            continueBtn.addEventListener("click", async () => {
+                    if (!selectedSeats.length) {
+                        alert("Vui lòng chọn ít nhất 1 ghế");
+                        return;
+                    }
 
-                persistSelectedSeats();
-                window.location.href = `/payment?showtimeId=${showtimeId}`;
-            });
+                    const currentUserId = getCurrentUserId();
+
+                    try {
+                        const seatMapRes = await fetch(`/api/showtimes/${showtimeId}/seat-map?userId=${currentUserId}`);
+                        if (!seatMapRes.ok) {
+                            throw new Error("Không tải được sơ đồ ghế");
+                        }
+
+                        const seatMapData = await seatMapRes.json();
+
+                        const ownHeldSeatIds = (seatMapData.seats || [])
+                            .filter(seat => seat.selectedByCurrentUser)
+                            .map(seat => Number(seat.seatId));
+
+                        const finalSelectedSeatIds = selectedSeats.map(s => Number(s.id));
+
+                        const seatIdsToRelease = ownHeldSeatIds.filter(id => !finalSelectedSeatIds.includes(id));
+
+                        if (seatIdsToRelease.length > 0) {
+                            await fetch(`/api/showtimes/${showtimeId}/hold-seats`, {
+                                method: "DELETE",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    userId: currentUserId,
+                                    seatIds: seatIdsToRelease
+                                })
+                            });
+                        }
+
+                        persistSelectedSeats();
+                        window.location.href = `/payment?showtimeId=${showtimeId}`;
+                    } catch (error) {
+                        console.error(error);
+                        alert("Không đồng bộ được ghế đã chọn");
+                    }
+                });
         }
 
         const exitBookingBtn = document.getElementById("exit-booking-btn");
@@ -177,6 +230,12 @@ function createSeatButton(seat, isCoupleRow) {
 }
 
 async function toggleSeat(button) {
+    const currentUserId = getCurrentUserId();
+
+    if (!currentUserId) {
+        alert("Không lấy được userId, vui lòng đăng nhập lại");
+        return;
+    }
     const seatId = Number(button.dataset.id);
     const existingIndex = selectedSeats.findIndex(s => s.id === String(seatId));
     const showtimeId = getShowtimeIdFromUrl();
@@ -324,16 +383,20 @@ function formatHourMinute(dateTimeString) {
 
 async function reloadSeatMap() {
     const showtimeId = getShowtimeIdFromUrl();
+    const currentUserId = getCurrentUserId();
 
     const response = await fetch(`/api/showtimes/${showtimeId}/seat-map?userId=${currentUserId}`);
     if (!response.ok) return;
 
     seatPageData = await response.json();
     renderSeatMap(seatPageData.seats || []);
+    restoreSelectedSeatsFromSession();
 }
 
 async function releaseAllHeldSeats() {
     const showtimeId = getShowtimeIdFromUrl();
+    const currentUserId = getCurrentUserId();
+
     if (!selectedSeats.length) return;
 
     try {
@@ -400,6 +463,7 @@ function restoreSelectedSeatsFromSession() {
 
 async function leaveBookingFlow() {
     const currentShowtimeId = sessionStorage.getItem(CURRENT_SHOWTIME_KEY) || getShowtimeIdFromUrl();
+    const currentUserId = getCurrentUserId();
 
     try {
         if (selectedSeats.length) {

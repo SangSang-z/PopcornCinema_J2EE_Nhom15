@@ -11,105 +11,340 @@ body{
     color:white;
 }
 
-/* NAVBAR */
+/* USER DROPDOWN */
+.user-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* TOGGLE */
+.user-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 8px 12px; 
+}
+
+/* MENU */
+.dropdown-menu {
+    position: absolute;
+    top: 120%;
+    right: 0;
+
+    background: white;
+    border-radius: 12px;
+    min-width: 220px;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+
+    display: none;
+
+    flex-direction: column;
+    padding: 8px 0;
+    white-space: nowrap;
+    z-index: 9999;
+}
+
+.user-dropdown:hover .dropdown-menu {
+    display: flex;
+}
+
+/* ITEM */
+.dropdown-menu a {
+    padding: 12px 16px;
+    text-decoration: none;
+    color: #333;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* ICON */
+.dropdown-menu i {
+    width: 16px;
+    text-align: center;
+}
+
+/* HOVER */
+.dropdown-menu a:hover {
+    background: #f2f2f2;
+}
+
+/* LOGOUT */
+.dropdown-menu .logout {
+    color: red;
+}
+
+/* ================= NAVBAR ================= */
 
 .navbar{
     display:flex;
     justify-content:space-between;
     align-items:center;
-
     padding:0 100px;
-
-    height:70px;
-
+    height:80px;
     background:#0B2341;
 }
 
 /* LEFT SIDE */
+
 .nav-left{
     display:flex;
     align-items:center;
     gap:50px;
 }
 
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: relative; 
+}
+
 /* LOGO */
+
 .logo-img{
-    height:140px;
+    height: 140px;
 }
 
 /* MENU */
+
 .nav-links{
     display:flex;
     list-style:none;
     gap:45px;
-    margin:0;
-    padding:0;
 }
 
 .nav-links a{
     text-decoration:none;
     color:white;
     font-size:15px;
-    font-weight:400;
-    letter-spacing:0.5px;
 }
 
 .nav-links a:hover{
     color:#F5C518;
 }
 
-/* AUTH */
+/* AUTH NAVBAR */
 
 .nav-auth{
     display:flex;
     align-items:center;
-    gap:30px;
+    gap:20px;
 }
 
-.login-btn{
+.nav-auth a{
     color:white;
-    font-size:15px;
     text-decoration:none;
+    font-size:15px;
 }
 
-.signup-btn{
-    background:#F5C518;
+.nav-auth a:hover{
+    color:#F5C518;
+}
+
+/* REGISTER BUTTON */
+
+.btn-register{
+    background:#6fcc17;
     color:black;
-    font-size:15px;
-    padding:10px 18px;
-    border-radius:8px;
-    text-decoration:none;
-    font-weight:600;
+    padding:7px 14px;
+    border-radius:6px;
+    font-weight:bold;
+    transition:0.2s;
 }
 
-/* HERO SLIDER */
+.btn-register:hover{
+    transform:translateY(-1px);
+}
 
-.hero-slider{
+/* ================= AUTH PAGE ================= */
 
+.auth-section{
+    min-height:85vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* CARD */
+
+.auth-card{
+    width:520px;
+    background:#E5E5E5;
+    padding:45px;
+    border-radius:25px;
+    text-align:center;
+    color:black;
+    box-shadow:0 20px 50px rgba(0,0,0,0.4);
+}
+
+/* TITLE */
+
+.auth-card h2{
+    font-size:30px;
+    margin-bottom:5px;
+}
+
+/* SUBTITLE */
+
+.auth-subtitle{
+    font-size:13px;
+    margin:15px 0 30px;
+    color:#666;
+    line-height:1.4;
+}
+
+/* FORM */
+
+.auth-card form{
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+}
+
+/* INPUT GROUP */
+
+.form-group{
+    text-align:left;
+    display:flex;
+    flex-direction:column;
+}
+
+.form-group label{
+    font-size:14px;
+    margin-bottom:6px;
+}
+
+/* INPUT */
+
+.form-group input{
     width:100%;
-    height:520px;   /* giảm từ 520/600 xuống */
+    padding:10px 4px;
+    border:none;
+    border-bottom:2px solid #aaa;
+    background:transparent;
+    outline:none;
+    font-size:14px;
+    transition:0.2s;
+}
 
-    overflow:hidden;
+.form-group input:focus{
+    border-bottom:2px solid #f39c12;
+}
 
+/* PASSWORD GROUP */
+
+.password-group{
     position:relative;
 }
 
-.slides{
+.password-group i{
+    position:absolute;
+    right:5px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    color:#555;
+    font-size:16px;
+}
 
+/* LOGIN OPTIONS */
+
+.login-options{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:-5px;
+    font-size:13px;
+}
+
+/* CHECKBOX */
+
+.remember-me{
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.remember-me input{
+    cursor:pointer;
+}
+
+/* FORGOT PASSWORD */
+
+.forgot-password{
+    text-decoration:none;
+    color:#1b2a3a;
+    font-weight:500;
+}
+
+.forgot-password:hover{
+    text-decoration:underline;
+}
+
+/* BUTTON */
+
+.btn-login{
+    width:220px;
+    padding:12px;
+    border:none;
+    border-radius:25px;
+    background:linear-gradient(45deg,#f7c96f,#f39c12);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:10px;
+    align-self:center;
+    transition:0.2s;
+}
+
+.btn-login:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* REGISTER LINK */
+
+.register-link{
+    margin-top:25px;
+    font-size:14px;
+    color:#555;
+}
+
+.register-link a{
+    font-weight:600;
+    color:#f39c12;
+    text-decoration:none;
+}
+
+.register-link a:hover{
+    text-decoration:underline;
+}
+
+
+/* ================= HERO SLIDER ================= */
+
+.hero-slider{
     width:100%;
-    height:100%;
+    aspect-ratio:16/6;
+    position:relative;
+    overflow:hidden;
 }
 
 .slide{
-
     position:absolute;
-
     width:100%;
     height:100%;
-
     opacity:0;
-
-    transition:opacity 1s ease;
+    transition:0.8s;
 }
 
 .slide.active{
@@ -117,62 +352,178 @@ body{
 }
 
 .slide img{
-
     width:100%;
     height:100%;
-
-    object-fit:cover;
-
-    object-position:center top; /* giữ nội dung banner */
-
+    object-fit:contain;
 }
-/* MOVIE SECTION */
+
+/* ARROW */
+
+.slider-btn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    background:rgba(0,0,0,0.6);
+    border:none;
+    color:white;
+    font-size:30px;
+    padding:8px 14px;
+    cursor:pointer;
+}
+
+.prev{ left:20px }
+.next{ right:20px }
+
+/* DOTS */
+
+.dots{
+    position:absolute;
+    bottom:15px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:8px;
+}
+
+.dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#bbb;
+}
+
+.dot.active{
+    background:#F5C518;
+}
+
+/* ================= MOVIE SECTION ================= */
+
 .movie-section{
     padding:70px 90px;
-    background:#0B1F3A;
 }
 
 .movie-section h2{
-    margin-bottom:35px;
-    font-size:26px;
+    margin-bottom:40px;
+    font-size:28px;
     color:#F5C518;
 }
 
+/* GRID */
+
 .movie-list{
-    display:flex;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
     gap:30px;
 }
 
+/* CARD */
+
 .movie-card{
-    width:220px;
     background:#0B2341;
     border-radius:10px;
     overflow:hidden;
-    box-shadow:0 6px 20px rgba(0,0,0,0.4);
     transition:0.3s;
 }
 
 .movie-card:hover{
-    transform:translateY(-10px);
+    transform:translateY(-6px);
 }
 
-.movie-card img{
+/* POSTER */
+
+.movie-poster{
+    position:relative;
+}
+
+.movie-poster img{
     width:100%;
-    height:320px;
+    height:330px;
     object-fit:cover;
 }
 
-.movie-card h3{
-    padding:12px;
-    font-size:16px;
-    text-align:center;
-    color:white;
+/* BADGE */
+
+.badge-hot{
+    position:absolute;
+    top:10px;
+    left:10px;
+    background:red;
+    font-size:12px;
+    padding:4px 7px;
+    border-radius:4px;
 }
 
-/* PROMOTION */
+/* OVERLAY */
+
+.overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    opacity:0;
+    transition:0.3s;
+}
+
+.movie-poster:hover .overlay{
+    opacity:1;
+}
+
+/* BUTTON */
+
+.btn-book{
+    background:#F5C518;
+    border:none;
+    padding:8px 14px;
+    border-radius:6px;
+    font-size:13px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.btn-book:hover{
+    background:#ffd43b;
+}
+
+/* INFO */
+
+.movie-info{
+    padding:14px;
+    text-align:center;
+}
+
+.movie-info h3{
+    font-size:16px;
+    min-height:42px;
+}
+
+.movie-duration{
+    font-size:13px;
+    color:#bbb;
+    margin:8px 0;
+}
+
+/* SHOWTIME */
+
+.showtimes{
+    display:flex;
+    justify-content:center;
+    gap:6px;
+}
+
+.showtimes span{
+    background:#F5C518;
+    color:black;
+    font-size:12px;
+    padding:3px 7px;
+    border-radius:4px;
+}
+
+/* ================= PROMOTION ================= */
+
 .promotion-section{
     padding:70px 90px;
-    background:#0B1F3A;
 }
 
 .promotion-section h2{
@@ -182,12 +533,12 @@ body{
 }
 
 .promotion-list{
-    display:flex;
-    gap:30px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:25px;
 }
 
 .promo-card{
-    width:300px;
     background:#0B2341;
     border-radius:10px;
     overflow:hidden;
@@ -195,7 +546,7 @@ body{
 }
 
 .promo-card:hover{
-    transform:translateY(-10px);
+    transform:translateY(-6px);
 }
 
 .promo-card img{
@@ -208,93 +559,60 @@ body{
     padding:15px;
 }
 
-/* FOOTER */
-.footer{
+/* ================= FOOTER ================= */
+
+footer{
     background:#0B2341;
-    padding:60px 120px 30px;
-    margin-top:60px;
+    padding:60px 90px 30px;
 }
 
-/* CONTAINER */
 .footer-container{
     display:flex;
-    align-items:flex-start;
-    gap:140px;
+    gap:120px;
 }
 
-/* COLUMN */
-.footer-col{
-    color:white;
-}
-
-/* TITLE */
 .footer-col h3{
-    font-size:18px;
-    margin-bottom:12px;
+    margin-bottom:10px;
     position:relative;
-    padding-bottom:8px;
 }
 
-/* LINE UNDER TITLE */
 .footer-col h3::after{
     content:"";
     position:absolute;
     left:0;
-    bottom:0;
+    bottom:-4px;
     width:40px;
     height:2px;
     background:#F5C518;
 }
 
-/* TEXT */
 .footer-col p{
-    margin:8px 0;
+    margin:6px 0;
     font-size:14px;
-    cursor:pointer;
-    transition:0.2s;
 }
-
-.footer-col p:hover{
-    color:#F5C518;
-}
-
-/* RIGHT SIDE */
 
 .footer-right{
     margin-left:auto;
-    display:flex;
-    flex-direction:column;
-    align-items:center;   /* căn giữa */
-    gap:15px;
+    text-align:center;
 }
 
-/* LOGO */
 .footer-logo{
-    height:100px;
-    width:auto;
-    display:block;
+    height:90px;
 }
 
 .social-icons{
     display:flex;
     gap:20px;
+    justify-content:center;
 }
 
 .social-icon{
     height:30px;
-    transition:0.3s;
 }
 
-.social-icon:hover{
-    transform:scale(1.2);
-}
-
-/* COPYRIGHT */
 .footer-bottom{
-    margin-top:40px;
+    margin-top:35px;
     text-align:center;
     color:#bbb;
     font-size:13px;
-    border-top:1px solid rgba(255,255,255,0.1);
-    padding-top:20px;
 }

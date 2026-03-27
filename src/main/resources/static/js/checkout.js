@@ -1,11 +1,19 @@
-const currentUserId = 1;
 const PAYMENT_TX_KEY = "paymentTx";
+function getCurrentUserId() {
+    return Number(document.getElementById("app-user")?.value || 0);
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
     const showtimeId = new URLSearchParams(window.location.search).get("showtimeId");
+    const currentUserId = getCurrentUserId();
 
     if (!showtimeId) {
         alert("Thiếu showtimeId trên URL");
+        return;
+    }
+
+    if (!currentUserId) {
+        alert("Bạn chưa đăng nhập hoặc không lấy được userId");
         return;
     }
 
@@ -24,6 +32,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const promotionId = document.getElementById("promotion-select").value || null;
 
         try {
+            sessionStorage.removeItem("paymentTx"); 
+            sessionStorage.removeItem("lastPaidOrderCode");
             const response = await fetch(`/api/showtimes/${showtimeId}/payment-transactions`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -42,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const tx = await response.json();
             sessionStorage.setItem(PAYMENT_TX_KEY, JSON.stringify(tx));
-            window.location.href = `/checkout-qr?showtimeId=${showtimeId}`;
+            window.location.href = `/checkout-qr?showtimeId=${showtimeId}&orderCode=${encodeURIComponent(tx.orderCode)}`;
         } catch (error) {
             console.error("Lỗi khi tạo giao dịch:", error);
             alert("Không tạo được giao dịch thanh toán");
@@ -63,6 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function loadSummary(showtimeId) {
+     const currentUserId = getCurrentUserId();
     const promotionId = document.getElementById("promotion-select")?.value || "";
     const url = promotionId
         ? `/api/showtimes/${showtimeId}/checkout-summary?userId=${currentUserId}&promotionId=${promotionId}`
@@ -107,7 +118,12 @@ async function loadPromotions() {
     promotions.forEach(p => {
         const option = document.createElement("option");
         option.value = p.id;
-        option.textContent = p.title;
+
+        const label = p.code
+            ? `${p.code} - ${p.title || ""}`
+            : (p.title || "Khuyến mãi");
+
+        option.textContent = label;
         select.appendChild(option);
     });
 }

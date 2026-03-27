@@ -8,5 +8,11 @@ public interface PaymentTransactionService {
     PaymentTransactionResponse createTransaction(Long showtimeId, CreatePaymentTransactionRequest request);
     PaymentTransactionStatusResponse getStatus(String orderCode);
     void cancel(String orderCode);
-    void mockPaid(String orderCode);
+
+    // user bấm "Tôi đã thanh toán"
+    void markSubmitted(String orderCode);
+
+    // admin xác nhận / từ chối
+    void confirmByAdmin(String orderCode);
+    void rejectByAdmin(String orderCode);
 }

@@ -2,11 +2,11 @@ package com.example.PopcornCinema.service.impl;
 
 import com.example.PopcornCinema.dto.*;
 import com.example.PopcornCinema.entity.Movie;
-import com.example.PopcornCinema.respository.MovieRepository;
-// import com.example.PopcornCinema.respository.projection.ActorProjection;
-// import com.example.PopcornCinema.respository.projection.GenreProjection;
-// import com.example.PopcornCinema.respository.projection.RelatedMovieProjection;
-import com.example.PopcornCinema.respository.projection.ShowtimeSeatMapProjection;
+import com.example.PopcornCinema.repository.MovieRepository;
+// import com.example.PopcornCinema.repository.projection.ActorProjection;
+// import com.example.PopcornCinema.repository.projection.GenreProjection;
+// import com.example.PopcornCinema.repository.projection.RelatedMovieProjection;
+import com.example.PopcornCinema.repository.projection.ShowtimeSeatMapProjection;
 import com.example.PopcornCinema.service.MovieService;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +31,7 @@ public class MovieServiceImpl implements MovieService {
         response.setId(movie.getId());
         response.setTitle(movie.getTitle());
         response.setPosterUrl(movie.getPosterUrl());
+        response.setBannerUrl(movie.getBannerUrl());
         response.setDirector(movie.getDirector());
         response.setDescription(movie.getDescription());
         response.setDurationMinutes(movie.getDurationMinutes());

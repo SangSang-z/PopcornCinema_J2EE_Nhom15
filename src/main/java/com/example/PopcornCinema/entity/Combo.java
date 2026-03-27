@@ -49,8 +49,11 @@ public class Combo {
     public void setName(String name) { this.name = name; }
     public void setDescription(String description) { this.description = description; }
     public void setPrice(BigDecimal price) { this.price = price; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public void setStatus(String status) { this.status = status; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String getImage() { return imageUrl; }
+    public void setImage(String image) { this.imageUrl = image; }
 }

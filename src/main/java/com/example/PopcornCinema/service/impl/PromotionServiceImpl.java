@@ -1,7 +1,7 @@
 package com.example.PopcornCinema.service.impl;
 
 import com.example.PopcornCinema.dto.PromotionDto;
-import com.example.PopcornCinema.respository.PromotionRepository;
+import com.example.PopcornCinema.repository.PromotionRepository;
 import com.example.PopcornCinema.service.PromotionService;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +22,7 @@ public class PromotionServiceImpl implements PromotionService {
                 .stream()
                 .map(p -> new PromotionDto(
                         p.getId(),
+                        p.getCode(),
                         p.getTitle(),
                         p.getDescription(),
                         p.getDiscountPercent(),

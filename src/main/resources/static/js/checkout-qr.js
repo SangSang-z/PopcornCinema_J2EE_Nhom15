@@ -1,8 +1,8 @@
 const PAYMENT_TX_KEY = "paymentTx";
 const LAST_PAID_ORDER_KEY = "lastPaidOrderCode";
 const DEMO_BANK = {
-    bankId: "MB",
-    accountNo: "123456789",
+    bankId: "VCB",
+    accountNo: "1030472376",
     accountName: "POPCORN CINEMA"
 };
 
@@ -14,9 +14,10 @@ window.addEventListener("beforeunload", stopBackgroundTimers);
 document.addEventListener("DOMContentLoaded", async () => {
     try {
         const tx = await resolveTransaction();
+        console.log("QR resolved tx =", tx);
+
         if (!tx) {
-            redirectToFailed("Thiếu thông tin giao dịch");
-            return;
+            throw new Error("resolveTransaction() trả về null");
         }
 
         renderTransaction(tx);
@@ -26,9 +27,74 @@ document.addEventListener("DOMContentLoaded", async () => {
         startPaymentPolling(tx.orderCode);
     } catch (error) {
         console.error("Không khởi tạo được trang QR:", error);
-        redirectToFailed("Không tải được giao dịch thanh toán");
+        alert(error?.message || "QR init failed");
+        return;
     }
 });
+
+function bindActions(tx) {
+    const backBtn = document.getElementById("back-to-checkout-btn");
+    if (!backBtn) throw new Error("Thiếu #back-to-checkout-btn");
+
+    backBtn.addEventListener("click", async () => {
+        try {
+            await fetch(`/api/payment-transactions/${encodeURIComponent(tx.orderCode)}/cancel`, { method: "POST" });
+        } catch (error) {
+            console.error("Không hủy được giao dịch:", error);
+        } finally {
+            clearCheckoutState();
+            const fallbackUrl = tx.showtimeId ? `/checkout?showtimeId=${tx.showtimeId}` : "/checkout";
+            window.location.href = fallbackUrl;
+        }
+    });
+
+    const copyBtn = document.getElementById("copy-transfer-content-btn");
+    if (copyBtn) {
+        copyBtn.addEventListener("click", async () => {
+            try {
+                await navigator.clipboard.writeText(tx.orderCode);
+                copyBtn.textContent = "Đã sao chép";
+                setTimeout(() => copyBtn.textContent = "Sao chép nội dung CK", 1500);
+            } catch (error) {
+                console.error("Không sao chép được nội dung chuyển khoản:", error);
+                alert(`Nội dung chuyển khoản: ${tx.orderCode}`);
+            }
+        });
+    }
+
+    const mockPaidBtn = document.getElementById("mock-paid-btn");
+    if (mockPaidBtn) {
+        if (tx.status === "PENDING_CONFIRMATION") {
+            mockPaidBtn.disabled = true;
+            mockPaidBtn.textContent = "Đang chờ admin xác nhận";
+        }
+
+        mockPaidBtn.addEventListener("click", async () => {
+            mockPaidBtn.disabled = true;
+            mockPaidBtn.textContent = "Đang gửi yêu cầu...";
+
+            try {
+                const response = await fetch(`/api/payment-transactions/${encodeURIComponent(tx.orderCode)}/mark-submitted`, {
+                    method: "POST"
+                });
+
+                if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+
+                tx.status = "PENDING_CONFIRMATION";
+                sessionStorage.setItem(PAYMENT_TX_KEY, JSON.stringify(tx));
+                mockPaidBtn.textContent = "Đang chờ admin xác nhận";
+                alert("Đã gửi yêu cầu. Vui lòng chờ admin xác nhận thanh toán.");
+            } catch (error) {
+                console.error("Không gửi được yêu cầu xác nhận thanh toán:", error);
+                alert("Không gửi được yêu cầu xác nhận. Bạn thử lại nhé.");
+                mockPaidBtn.disabled = false;
+                mockPaidBtn.textContent = "Tôi đã gửi lệnh chuyển khoản";
+            }
+        });
+    }
+}
 
 async function resolveTransaction() {
     const url = new URL(window.location.href);
@@ -36,34 +102,40 @@ async function resolveTransaction() {
     const showtimeIdFromUrl = url.searchParams.get("showtimeId");
     const storedTx = readStoredTransaction();
 
-    if (storedTx && (!orderCodeFromUrl || storedTx.orderCode === orderCodeFromUrl)) {
-        syncCheckoutQrUrl(storedTx.showtimeId || showtimeIdFromUrl, storedTx.orderCode);
+    console.log("orderCodeFromUrl =", orderCodeFromUrl);
+    console.log("showtimeIdFromUrl =", showtimeIdFromUrl);
+    console.log("storedTx =", storedTx);
+
+    if (orderCodeFromUrl) {
+        const statusRes = await fetch(`/api/payment-transactions/${encodeURIComponent(orderCodeFromUrl)}/status`);
+        console.log("statusRes =", statusRes.status, statusRes.ok);
+
+        if (!statusRes.ok) {
+            const text = await statusRes.text();
+            throw new Error("Status API lỗi: " + text);
+        }
+
+        const statusData = await statusRes.json();
+        console.log("statusData =", statusData);
+
+        const tx = normalizeTransaction({
+            orderCode: statusData.orderCode,
+            showtimeId: showtimeIdFromUrl,
+            amount: statusData.amount,
+            status: statusData.status,
+            expiresAt: statusData.expiresAt
+        });
+
+        sessionStorage.setItem(PAYMENT_TX_KEY, JSON.stringify(tx));
+        syncCheckoutQrUrl(tx.showtimeId || showtimeIdFromUrl, tx.orderCode);
+        return tx;
+    }
+
+    if (storedTx) {
         return normalizeTransaction(storedTx);
     }
 
-    if (!orderCodeFromUrl) {
-        return null;
-    }
-
-    const statusRes = await fetch(`/api/payment-transactions/${encodeURIComponent(orderCodeFromUrl)}/status`);
-    if (!statusRes.ok) {
-        return null;
-    }
-
-    const statusData = await statusRes.json();
-    const tx = normalizeTransaction({
-        orderCode: statusData.orderCode,
-        showtimeId: showtimeIdFromUrl,
-        amount: statusData.amount,
-        status: statusData.status,
-        expiresAt: statusData.expiresAt,
-        qrContent: buildTransferContent(statusData.orderCode),
-        qrImageUrl: buildVietQrImageUrl(statusData.orderCode, statusData.amount)
-    });
-
-    sessionStorage.setItem(PAYMENT_TX_KEY, JSON.stringify(tx));
-    syncCheckoutQrUrl(tx.showtimeId || showtimeIdFromUrl, tx.orderCode);
-    return tx;
+    return null;
 }
 
 function normalizeTransaction(tx) {
@@ -71,20 +143,26 @@ function normalizeTransaction(tx) {
 
     return {
         ...tx,
-        qrContent: tx.qrContent || buildTransferContent(tx.orderCode),
-        qrImageUrl: tx.qrImageUrl || buildVietQrImageUrl(tx.orderCode, tx.amount)
+        qrContent: buildTransferContent(tx.orderCode),
+        qrImageUrl: buildVietQrImageUrl(tx.orderCode, tx.amount)
     };
 }
 
 function renderTransaction(tx) {
-    document.getElementById("order-code").textContent = tx.orderCode || "---";
-    document.getElementById("payment-amount").textContent = formatCurrency(tx.amount);
-
+    const orderCodeEl = document.getElementById("order-code");
+    const amountEl = document.getElementById("payment-amount");
     const qrImage = document.getElementById("qr-image");
+
+    if (!orderCodeEl) throw new Error("Thiếu #order-code");
+    if (!amountEl) throw new Error("Thiếu #payment-amount");
+    if (!qrImage) throw new Error("Thiếu #qr-image");
+
+    orderCodeEl.textContent = tx.orderCode || "---";
+    amountEl.textContent = formatCurrency(tx.amount);
+
     qrImage.src = tx.qrImageUrl;
     qrImage.alt = `QR thanh toán ${tx.orderCode}`;
 }
-
 function enhanceQrPanel(tx) {
     const ticketInfo = document.querySelector(".ticket-info");
     if (!ticketInfo || document.getElementById("payment-bank-info")) {
@@ -118,65 +196,49 @@ function enhanceQrPanel(tx) {
     mockPaidBtn.type = "button";
     mockPaidBtn.id = "mock-paid-btn";
     mockPaidBtn.className = "btn-next";
-    mockPaidBtn.textContent = "Tôi đã thanh toán";
+    mockPaidBtn.textContent = "Tôi đã gửi lệnh chuyển khoản";
 
     actionWrapper.append(copyBtn, mockPaidBtn);
     ticketInfo.appendChild(actionWrapper);
 }
 
-function bindActions(tx) {
-    document.getElementById("back-to-checkout-btn").addEventListener("click", async () => {
+const mockPaidBtn = document.getElementById("mock-paid-btn");
+if (mockPaidBtn) {
+    if (tx.status === "PENDING_CONFIRMATION") {
+        mockPaidBtn.disabled = true;
+        mockPaidBtn.textContent = "Đang chờ admin xác nhận";
+    }
+
+    mockPaidBtn.addEventListener("click", async () => {
+        mockPaidBtn.disabled = true;
+        mockPaidBtn.textContent = "Đang gửi yêu cầu...";
+
         try {
-            await fetch(`/api/payment-transactions/${encodeURIComponent(tx.orderCode)}/cancel`, { method: "POST" });
+            const response = await fetch(`/api/payment-transactions/${encodeURIComponent(tx.orderCode)}/mark-submitted`, {
+                method: "POST"
+            });
+
+            if (!response.ok) {
+                throw new Error(await response.text());
+            }
+
+            tx.status = "PENDING_CONFIRMATION";
+            sessionStorage.setItem(PAYMENT_TX_KEY, JSON.stringify(tx));
+            mockPaidBtn.textContent = "Đang chờ admin xác nhận";
+            alert("Đã gửi yêu cầu. Vui lòng chờ admin xác nhận thanh toán.");
         } catch (error) {
-            console.error("Không hủy được giao dịch:", error);
-        } finally {
-            clearCheckoutState();
-            const fallbackUrl = tx.showtimeId ? `/checkout?showtimeId=${tx.showtimeId}` : "/checkout";
-            window.location.href = fallbackUrl;
+            console.error("Không gửi được yêu cầu xác nhận thanh toán:", error);
+            alert("Không gửi được yêu cầu xác nhận. Bạn thử lại nhé.");
+            mockPaidBtn.disabled = false;
+            mockPaidBtn.textContent = "Tôi đã gửi lệnh chuyển khoản";
         }
     });
-
-    const copyBtn = document.getElementById("copy-transfer-content-btn");
-    if (copyBtn) {
-        copyBtn.addEventListener("click", async () => {
-            try {
-                await navigator.clipboard.writeText(tx.orderCode);
-                copyBtn.textContent = "Đã sao chép";
-                setTimeout(() => copyBtn.textContent = "Sao chép nội dung CK", 1500);
-            } catch (error) {
-                console.error("Không sao chép được nội dung chuyển khoản:", error);
-                alert(`Nội dung chuyển khoản: ${tx.orderCode}`);
-            }
-        });
-    }
-
-    const mockPaidBtn = document.getElementById("mock-paid-btn");
-    if (mockPaidBtn) {
-        mockPaidBtn.addEventListener("click", async () => {
-            mockPaidBtn.disabled = true;
-            mockPaidBtn.textContent = "Đang xác nhận...";
-
-            try {
-                const response = await fetch(`/api/payment-transactions/${encodeURIComponent(tx.orderCode)}/mock-paid`, {
-                    method: "POST"
-                });
-
-                if (!response.ok) {
-                    throw new Error(await response.text());
-                }
-            } catch (error) {
-                console.error("Không xác nhận được thanh toán:", error);
-                alert("Không xác nhận được thanh toán. Bạn thử lại nhé.");
-                mockPaidBtn.disabled = false;
-                mockPaidBtn.textContent = "Tôi đã thanh toán";
-            }
-        });
-    }
 }
 
 function startPaymentCountdown(tx) {
     const countdownEl = document.getElementById("payment-countdown");
+    if (!countdownEl) throw new Error("Thiếu #payment-countdown");
+
     const expiredTime = new Date(tx.expiresAt).getTime();
 
     const render = () => {
@@ -221,10 +283,26 @@ function startPaymentPolling(orderCode) {
                 return;
             }
 
-            if (data.status === "EXPIRED" || data.status === "CANCELLED") {
+            if (data.status === "PENDING_CONFIRMATION") {
+                const mockPaidBtn = document.getElementById("mock-paid-btn");
+                if (mockPaidBtn) {
+                    mockPaidBtn.disabled = true;
+                    mockPaidBtn.textContent = "Đang chờ admin xác nhận";
+                }
+                return;
+            }
+
+            if (data.status === "REJECTED") {
                 stopBackgroundTimers();
                 clearCheckoutState();
-                redirectToFailed("Giao dịch đã hết hạn hoặc đã bị hủy", orderCode);
+                redirectToFailed("Admin chưa xác nhận được thanh toán", orderCode);
+                return;
+            }
+
+            if (data.status === "EXPIRED" || data.status === "CANCELLED" || data.status === "FAILED") {
+                stopBackgroundTimers();
+                clearCheckoutState();
+                redirectToFailed("Giao dịch đã hết hạn, bị hủy hoặc xử lý lỗi", orderCode);
             }
         } catch (error) {
             console.error("Lỗi kiểm tra trạng thái thanh toán:", error);

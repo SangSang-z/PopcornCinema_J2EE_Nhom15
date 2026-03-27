@@ -81,38 +81,62 @@
 /* ===================== */
 
 .movie-info{
-    max-width:520px;
-    padding-top:0;
+    max-width: 520px;
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
 }
 
 .movie-info h1{
-    font-size:34px;
-    margin-bottom:15px;
+    font-size: 34px;
+    margin: 0 0 18px;
+    line-height: 1.25;
+    text-align: left;
 }
 
 .movie-meta{
-    display:flex;
-    gap:10px;
-    align-items:center;
-    margin-bottom:12px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    text-align: left;
 }
 
 .rating{
-    margin-bottom:14px;
+    margin: 0 0 18px;
+    text-align: left;
+}
+
+.movie-desc{
+    width: 100%;
+    text-align: left;
 }
 
 .movie-desc p{
-    margin:5px 0;
+    margin: 0 0 8px;
+    line-height: 1.6;
+    text-align: left;
+}
+
+.movie-desc p:last-child{
+    margin-bottom: 0;
 }
 
 .tag{
-    background:#ffb400;
-    padding:4px 8px;
-    border-radius:4px;
-    color:black;
-    font-weight:bold;
+    background: #ffb400;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: black;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
 }
-
 /* ===================== */
 /* SIDEBAR */
 /* ===================== */
@@ -375,7 +399,39 @@
 }
 /* ===================== */
 /* SEET */
-/* ===================== */
+/* ===================== */     
 .showtime-link{
     text-decoration:none;
+}
+
+/* ===================== */
+/* Thanh lịch chiếu */
+/* ===================== */
+
+.showtime-days-wrapper{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.showtime-nav-btn{
+    width: 38px;
+    height: 38px;
+    border: none;
+    border-radius: 50%;
+    background: #163d74;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: .2s;
+    flex-shrink: 0;
+}
+
+.showtime-nav-btn:hover{
+    background: #f6b500;
+    color: #000;
 }

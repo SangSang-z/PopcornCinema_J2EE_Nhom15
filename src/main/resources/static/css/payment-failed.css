@@ -1,0 +1,91 @@
+.payment-failed-page {
+    min-height: 420px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 20px 64px;
+    background: transparent;
+}
+
+.payment-failed-card {
+    width: 100%;
+    max-width: 1100px;
+    background: #0f3b75;
+    border-radius: 18px;
+    padding: 56px 40px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.payment-failed-card h2 {
+    margin: 0 0 18px;
+    color: #ffffff;
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.payment-failed-card p {
+    max-width: 920px;
+    margin: 0 auto;
+    color: #ffffff;
+    font-size: 22px;
+    line-height: 1.6;
+}
+
+.payment-failed-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.failed-home-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 240px;
+    padding: 14px 28px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+@media (max-width: 992px) {
+    .payment-failed-card {
+        padding: 42px 24px;
+    }
+
+    .payment-failed-card h2 {
+        font-size: 40px;
+    }
+
+    .payment-failed-card p {
+        font-size: 19px;
+    }
+}
+
+@media (max-width: 576px) {
+    .payment-failed-page {
+        padding: 32px 16px 48px;
+    }
+
+    .payment-failed-card {
+        padding: 32px 18px;
+        border-radius: 14px;
+    }
+
+    .payment-failed-card h2 {
+        font-size: 30px;
+    }
+
+    .payment-failed-card p {
+        font-size: 16px;
+    }
+
+    .failed-home-btn {
+        width: 100%;
+        max-width: 260px;
+        font-size: 16px;
+    }
+}
