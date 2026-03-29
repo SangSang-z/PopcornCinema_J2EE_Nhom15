@@ -1,0 +1,16 @@
+<h1 th:text="${promotion.title}"></h1>
+
+<img th:src="${promotion.image}" width="400"/>
+
+<p th:text="${promotion.description}"></p>
+
+<p th:text="${promotion.discount}"></p>
+
+<form action="/save" method="post">
+    <input type="hidden" name="userId" value="1"/>
+    <input type="hidden" name="promotionId" th:value="${promotion.id}"/>
+
+    <button type="submit">Lưu khuyến mãi</button>
+</form>
+
+<a href="/promotions">← Quay lại</a>

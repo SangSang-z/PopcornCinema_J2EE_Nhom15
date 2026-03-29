@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khuyến mãi - Popcorn Cinema</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="promotion-page-body">
+
+<div class="promotion-layout">
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="promotion-main">
+        <div class="promotion-content">
+            <section class="promotion-left">
+                <h2 class="promotion-section-title">ƯU ĐÃI</h2>
+
+                <div class="promotion-grid-left">
+
+                    <div class="promo-poster" th:each="p : ${promotions}">
+                        
+                        <a th:href="@{/promotions/{id}(id=${p.id})}">
+                            <img th:src="${p.image}" alt="Khuyến mãi">
+                        </a>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="promotion-right">
+                <h2 class="promotion-section-title">PHIM SẮP CHIẾU</h2>
+
+                <div class="showing-movie-list">
+                    <div class="showing-banner">
+                        <img th:src="@{/images/movie1.jpg}" alt="Phim 1">
+                    </div>
+                    <div class="showing-banner">
+                        <img th:src="@{/images/movie2.jpg}" alt="Phim 2">
+                    </div>
+                    <div class="showing-banner">
+                        <img th:src="@{/images/movie3.jpg}" alt="Phim 3">
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phim - Popcorn Cinema</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body class="movie-page-body">
+
+<div class="movie-layout">
+
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="movie-main">
+        <div class="site-container">
+
+            <section class="movie-section">
+
+                <div class="movie-tabs">
+                    <a th:href="@{/movies}" class="movie-tab active">Đang Chiếu</a>
+                    <a th:href="@{/movies/upcoming}" class="movie-tab">Sắp Chiếu</a>
+                </div>
+
+                <div class="movie-grid">
+
+                    <div class="movie-item" th:each="i : ${#numbers.sequence(1,23)}">
+
+                        <div class="movie-card">
+                            <div class="movie-poster">
+                                <img th:src="@{'/images/movie/phim' + ${i} + '.jpg'}" alt="Phim">
+                            </div>
+                        </div>
+
+                        <div class="movie-buy-wrapper">
+                            <a href="#" class="movie-buy-btn">Mua Vé</a>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+</div>
+
+</body>
+</html>
