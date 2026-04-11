@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chuyển đến SePay</title>
+    <style>
+        body{font-family:Arial, sans-serif;background:#f5f7fb;color:#0c1b3a;text-align:center;padding:48px;}
+        .box{max-width:520px;margin:0 auto;background:#fff;border-radius:12px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,0.08);}
+        .spinner{width:38px;height:38px;border:3px solid #d5dcef;border-top:3px solid #1f6feb;border-radius:50%;margin:18px auto;animation:spin 1s linear infinite;}
+        @keyframes spin{to{transform:rotate(360deg);}}
+        .note{color:#5a6a85;font-size:14px;margin-top:10px;}
+        .btn{margin-top:16px;padding:10px 18px;border-radius:20px;background:#f6b500;color:#000;border:none;font-weight:700;cursor:pointer;}
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Đang chuyển đến SePay...</h2>
+        <div class="spinner"></div>
+        <p class="note">Nếu trình duyệt không tự chuyển, bấm nút bên dưới.</p>
+
+        <form id="sepay-form" th:action="${actionUrl}" method="POST">
+            <input type="hidden" name="order_amount" th:value="${orderAmount}">
+            <input type="hidden" name="merchant" th:value="${merchant}">
+            <input type="hidden" name="currency" th:value="${currency}">
+            <input type="hidden" name="operation" th:value="${operation}">
+            <input type="hidden" name="order_description" th:value="${orderDescription}">
+            <input type="hidden" name="order_invoice_number" th:value="${orderInvoiceNumber}">
+            <input type="hidden" name="customer_id" th:if="${customerId != null}" th:value="${customerId}">
+            <input type="hidden" name="payment_method" th:if="${paymentMethod != null}" th:value="${paymentMethod}">
+            <input type="hidden" name="success_url" th:value="${successUrl}">
+            <input type="hidden" name="error_url" th:value="${errorUrl}">
+            <input type="hidden" name="cancel_url" th:value="${cancelUrl}">
+            <input type="hidden" name="signature" th:value="${signature}">
+            <button type="submit" class="btn">Tiếp tục thanh toán</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("sepay-form").submit();
+    </script>
+</body>
+</html>

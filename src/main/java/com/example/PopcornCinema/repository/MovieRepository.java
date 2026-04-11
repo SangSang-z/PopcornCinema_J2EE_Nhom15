@@ -8,11 +8,23 @@ import com.example.PopcornCinema.repository.projection.RelatedMovieProjection;
 import com.example.PopcornCinema.repository.projection.ShowtimeSeatMapProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface MovieRepository extends JpaRepository<Movie, Long> {
+
+    List<Movie> findByStatusOrderByReleaseDateDescIdDesc(String status);
+
+    @Query("""
+        SELECT t.showtime.movie
+        FROM Ticket t
+        WHERE UPPER(t.status) IN ('BOOKED', 'USED')
+        GROUP BY t.showtime.movie
+        ORDER BY COUNT(t.id) DESC
+    """)
+    List<Movie> findTopMoviesByTicketSales(Pageable pageable);
 
     @Query(value = """
         SELECT g.id AS id, g.name AS name

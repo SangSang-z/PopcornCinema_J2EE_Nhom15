@@ -1,7 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Popcorn Cinema</title>
 
     <link rel="stylesheet" th:href="@{/css/styles.css}">
@@ -11,110 +12,172 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
-<body>
+<body class="home-page-body">
 
 <!-- HEADER -->
 <div th:replace="~{fragments/header :: header}"></div>
 
 <!-- HERO -->
-<section class="hero-slider">
-    <div class="slides">
+<section class="home-hero">
+    <div class="home-hero-inner">
+        <div class="home-hero-media">
+            <div class="hero-slider home-hero-slider">
+                <div class="slides">
 
-        <div class="slide active">
-            <img th:src="@{/images/banner1.jpg}">
+                    <div class="home-hero-slide">
+                        <img class="home-hero-backdrop" th:src="@{/images/image.png}" src="/images/image.png" alt="">
+                        <img class="home-hero-image" th:src="@{/images/image.png}" src="/images/image.png" alt="Banner 1">
+                    </div>
+
+                    <div class="home-hero-slide">
+                        <img class="home-hero-backdrop" th:src="@{/images/image1.png}" src="/images/image1.png" alt="">
+                        <img class="home-hero-image" th:src="@{/images/image1.png}" src="/images/image1.png" alt="Banner 2">
+                    </div>
+
+                    <div class="home-hero-slide">
+                        <img class="home-hero-backdrop" th:src="@{/images/banner2.jpg}" src="/images/banner2.jpg" alt="">
+                        <img class="home-hero-image" th:src="@{/images/banner2.jpg}" src="/images/banner2.jpg" alt="Banner 3">
+                    </div>
+
+                </div>
+            </div>
+            <button class="home-hero-nav home-hero-prev" type="button" aria-label="Previous banner">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button class="home-hero-nav home-hero-next" type="button" aria-label="Next banner">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <div class="home-hero-dots" aria-hidden="true"></div>
+            <div class="home-hero-scrim"></div>
         </div>
 
-        <div class="slide">
-            <img th:src="@{/images/banner2.jpg}">
+        <div class="home-hero-content">
+            <p class="home-hero-eyebrow">Popcorn Cinema</p>
+            <h1 class="home-hero-title">Trải nghiệm điện ảnh đỉnh cao</h1>
+            <p class="home-hero-desc">
+                Đặt vé nhanh, chọn suất chiếu dễ dàng và khám phá những bộ phim mới nhất.
+            </p>
+            <div class="home-hero-actions">
+                <a href="#now-showing" class="home-hero-btn primary">Phim đang chiếu</a>
+                <a href="#upcoming" class="home-hero-btn ghost">Phim sắp chiếu</a>
+                <a th:href="@{/promotions}" class="home-hero-btn ghost">Khuyến mãi</a>
+            </div>
         </div>
-
     </div>
 </section>
 
-<!-- ================= MOVIES ================= -->
-<section class="movie-section">
-
-    <h2>Phim Đang Chiếu</h2>
-
-    <div class="movie-list">
-
-        <!-- 🔥 DYNAMIC MOVIE -->
-        <div class="movie-card"
-             th:each="movie : ${movies}">
-
-            <div class="movie-poster">
-
-                <!-- POSTER -->
-                <img th:src="${movie.posterUrl != null ? movie.posterUrl : '/images/no-image.png'}">
-
-                <!-- HOT -->
-                <span class="badge-hot" th:if="${movie.hot == true}">
-                    HOT
-                </span>
-
-                <!-- OVERLAY -->
-                <div class="overlay">
-                    <a th:href="@{/booking/{id}(id=${movie.id})}">
-                        <button class="btn-book">
-                            Đặt vé ngay
-                        </button>
-                    </a>
-                </div>
-
-            </div>
-
-            <div class="movie-info">
-
-                <!-- TITLE -->
-                <h3 th:text="${movie.title}"></h3>
-
-                <!-- DURATION -->
-                <p class="movie-duration"
-                   th:text="${movie.duration + ' phút'}">
-                </p>
-
-                <!-- SHOWTIMES -->
-                <div class="showtimes">
-
-                    <span th:each="st : ${movie.showtimes}"
-                          th:text="${#temporals.format(st.startTime,'HH:mm')}">
-                    </span>
-
-                </div>
-
-            </div>
-
+<!-- ================= NOW SHOWING ================= -->
+<section id="now-showing" class="home-section">
+    <div class="home-section-header">
+        <div class="home-section-text">
+            <h2>Phim đang chiếu</h2>
+            <p>Những bộ phim hot nhất đang có mặt tại rạp.</p>
         </div>
-
+        <a th:href="@{/movies}" class="home-section-link">Xem tất cả</a>
     </div>
 
+    <div class="home-movie-grid">
+        <div class="home-movie-card" th:each="movie, iter : ${nowShowing}" th:if="${iter.index < 4}">
+            <div class="home-movie-poster">
+                <img th:src="${movie.posterUrl != null ? movie.posterUrl : '/images/no-image.png'}"
+                     th:alt="${movie.title}">
+
+                <span class="home-movie-badge" th:if="${movie.ageRating != null}"
+                      th:text="${movie.ageRating}"></span>
+
+                <div class="home-movie-overlay">
+                    <a th:href="@{/movie-detail(id=${movie.id})}"
+                       data-require-login="true"
+                       class="home-movie-btn">Mua vé</a>
+                </div>
+            </div>
+
+            <div class="home-movie-info">
+                <h3 th:text="${movie.title}"></h3>
+                <p class="home-movie-meta">
+                    <span th:text="${movie.durationMinutes != null ? movie.durationMinutes + ' phút' : 'Đang cập nhật'}"></span>
+                    <span class="home-meta-sep" th:if="${movie.releaseDate != null}">|</span>
+                    <span th:if="${movie.releaseDate != null}"
+                          th:text="${#temporals.format(movie.releaseDate, 'dd/MM/yyyy')}"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <p th:if="${#lists.isEmpty(nowShowing)}" class="home-empty">
+        Hiện chưa có phim đang chiếu.
+    </p>
+</section>
+
+<!-- ================= UPCOMING ================= -->
+<section id="upcoming" class="home-section alt">
+    <div class="home-section-header">
+        <div class="home-section-text">
+            <h2>Phim sắp chiếu</h2>
+            <p>Sắp ra mắt tại rạp, đừng bỏ lỡ.</p>
+        </div>
+        <a th:href="@{/movies}" class="home-section-link">Xem tất cả</a>
+    </div>
+
+    <div class="home-movie-grid">
+        <div class="home-movie-card" th:each="movie, iter : ${upcoming}" th:if="${iter.index < 4}">
+            <div class="home-movie-poster">
+                <img th:src="${movie.posterUrl != null ? movie.posterUrl : '/images/no-image.png'}"
+                     th:alt="${movie.title}">
+
+                <span class="home-movie-badge" th:if="${movie.ageRating != null}"
+                      th:text="${movie.ageRating}"></span>
+
+                <div class="home-movie-overlay">
+                    <a th:href="@{/movies/upcoming/{id}(id=${movie.id})}"
+                       class="home-movie-btn">Xem chi tiết</a>
+                </div>
+            </div>
+
+            <div class="home-movie-info">
+                <h3 th:text="${movie.title}"></h3>
+                <p class="home-movie-meta">
+                    <span th:text="${movie.releaseDate != null ? #temporals.format(movie.releaseDate, 'dd/MM/yyyy') : 'Đang cập nhật'}"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <p th:if="${#lists.isEmpty(upcoming)}" class="home-empty">
+        Hiện chưa có phim sắp chiếu.
+    </p>
 </section>
 
 <!-- ================= PROMOTION ================= -->
-<section class="promotion-section">
-
-    <h2>Khuyến Mãi / Sự Kiện</h2>
-
-    <div class="promotion-list">
-
-        <div class="promo-card">
-            <img th:src="@{/images/khuyenmai2.jpg}">
-            <div class="promo-content">
-                <h3>Ưu đãi ngày lễ</h3>
-                <p>Giảm 20% giá vé</p>
-            </div>
+<section class="home-section">
+    <div class="home-section-header">
+        <div class="home-section-text">
+            <h2>Khuyến mãi / Sự kiện</h2>
+            <p>Ưu đãi hấp dẫn dành cho bạn.</p>
         </div>
-
-        <div class="promo-card">
-            <img th:src="@{/images/khuyenmai1.jpg}">
-            <div class="promo-content">
-                <h3>Combo bắp nước</h3>
-                <p>Tặng combo miễn phí</p>
-            </div>
-        </div>
-
+        <a th:href="@{/promotions}" class="home-section-link">Xem tất cả</a>
     </div>
 
+    <div class="home-promo-grid">
+        <p th:if="${#lists.isEmpty(promotions)}" class="home-empty">
+            Hiện chưa có khuyến mãi.
+        </p>
+
+        <a th:each="p, iter : ${promotions}"
+           th:if="${iter.index < 4}"
+           th:href="@{/promotions/{id}(id=${p.id})}"
+           class="home-promo-card">
+            <img th:src="${p.posterUrl != null ? p.posterUrl : '/images/no-image.png'}"
+                 th:alt="${p.title}">
+            <div class="home-promo-content">
+                <h3 th:text="${p.title}"></h3>
+                <p th:if="${p.discountPercent != null}"
+                   th:text="${'Giảm ' + p.discountPercent + '%'}"></p>
+                <p th:if="${p.discountPercent == null and p.discountAmount != null}"
+                   th:text="${'Giảm ' + p.discountAmount + ' VNĐ'}"></p>
+            </div>
+        </a>
+    </div>
 </section>
 
 <!-- FOOTER -->

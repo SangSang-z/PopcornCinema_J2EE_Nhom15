@@ -7,7 +7,11 @@ let allShowDates = [];
 let visibleStartIndex = 0;
 const VISIBLE_DAYS = 5;
 
-const currentUserId = 1;
+const currentUserId = (() => {
+    const raw = document.getElementById("app-user")?.value;
+    const parsed = Number(raw);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+})();
 const HOLD_EXPIRES_AT_KEY = "holdExpiresAt";
 const SELECTED_SEATS_KEY = "selectedSeatsData";
 const SEAT_TOTAL_KEY = "seatTotal";
@@ -379,6 +383,11 @@ function clearBookingSession() {
 }
 
 async function startNewBookingFlow(newShowtimeId) {
+    if (!currentUserId) {
+        window.location.href = "/login";
+        return;
+    }
+
     const oldShowtimeId = sessionStorage.getItem(CURRENT_SHOWTIME_KEY);
     const savedSeats = JSON.parse(sessionStorage.getItem(SELECTED_SEATS_KEY) || "[]");
 

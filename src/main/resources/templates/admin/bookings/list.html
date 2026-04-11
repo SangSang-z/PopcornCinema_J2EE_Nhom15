@@ -97,19 +97,7 @@
                     </td>
 
                     <td>
-                        <div class="d-flex gap-2" th:if="${o.canConfirm or o.canReject}">
-                            <form th:action="@{/admin/bookings/{orderCode}/confirm(orderCode=${o.orderCode})}" method="post">
-                                <button class="btn btn-success btn-sm">Xác nhận</button>
-                            </form>
-
-                            <form th:action="@{/admin/bookings/{orderCode}/reject(orderCode=${o.orderCode})}" method="post">
-                                <button class="btn btn-danger btn-sm">Từ chối</button>
-                            </form>
-                        </div>
-
-                        <span class="text-muted small" th:if="${!o.canConfirm and !o.canReject}">
-                            Không có thao tác
-                        </span>
+                        <span class="text-muted small">Tự động (SePay)</span>
                     </td>
                 </tr>
                 </tbody>

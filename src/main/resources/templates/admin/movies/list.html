@@ -41,7 +41,7 @@
                 <!-- TABLE CARD -->
                 <div class="admin-card">
 
-                    <table class="table table-hover align-middle text-center">
+                    <table class="table admin-table table-hover align-middle text-center">
 
                         <thead class="table-dark">
                             <tr>
@@ -65,7 +65,7 @@
 
                                 <!-- POSTER -->
                                 <td>
-                                    <img class="movie-img"
+                                    <img class="movie-poster"
                                          th:src="${movie.posterUrl != null ? movie.posterUrl : '/images/no-image.png'}">
                                 </td>
 
@@ -88,10 +88,16 @@
                                           th:if="${movie.status == 'COMING_SOON'}">
                                           Sắp chiếu
                                     </span>
+
+                                    <span class="badge bg-secondary"
+                                          th:if="${movie.status == 'STOPPED'}">
+                                          Ngừng chiếu
+                                    </span>
                                 </td>
 
                                 <!-- ACTION -->
                                 <td>
+                                    <div class="actions">
 
                                     <!-- VIEW -->
                                     <button class="btn btn-info btn-sm"
@@ -122,6 +128,7 @@
                                        Xóa
                                     </a>
 
+                                    </div>
                                 </td>
 
                             </tr>

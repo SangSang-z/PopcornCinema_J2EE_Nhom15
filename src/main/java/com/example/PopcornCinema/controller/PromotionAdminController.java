@@ -5,15 +5,19 @@ import com.example.PopcornCinema.repository.PromotionRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/admin/promotions")
 public class PromotionAdminController {
 
     private final PromotionRepository promotionRepo;
+    private static final String UPLOAD_DIR = "uploads/promotions/";
 
     public PromotionAdminController(PromotionRepository promotionRepo){
         this.promotionRepo = promotionRepo;
@@ -34,7 +38,9 @@ public class PromotionAdminController {
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute Promotion promotion, Model model){
+    public String save(@ModelAttribute Promotion promotion,
+                       @RequestParam(value = "posterFile", required = false) MultipartFile posterFile,
+                       Model model){
         try {
             if (promotion.getCode() == null || promotion.getCode().isBlank()) {
                 model.addAttribute("error", "Mã khuyến mãi không được để trống");
@@ -61,6 +67,14 @@ public class PromotionAdminController {
 
             if (promotion.getMinOrderValue() == null) {
                 promotion.setMinOrderValue(0);
+            }
+
+            if (posterFile != null && !posterFile.isEmpty()) {
+                String fileName = System.currentTimeMillis() + "_" + posterFile.getOriginalFilename();
+                Path uploadPath = Paths.get(UPLOAD_DIR);
+                Files.createDirectories(uploadPath);
+                Files.write(uploadPath.resolve(fileName), posterFile.getBytes());
+                promotion.setPosterUrl("/uploads/promotions/" + fileName);
             }
 
             promotionRepo.save(promotion);

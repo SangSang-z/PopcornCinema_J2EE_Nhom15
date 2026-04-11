@@ -28,4 +28,11 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
           AND UPPER(t.status) IN ('BOOKED', 'USED')
     """)
     List<Long> findSoldSeatIdsByShowtimeId(@Param("showtimeId") Long showtimeId);
+
+    @Query("""
+        SELECT COUNT(t)
+        FROM Ticket t
+        WHERE UPPER(t.status) IN ('BOOKED', 'USED')
+    """)
+    long countSoldTickets();
 }

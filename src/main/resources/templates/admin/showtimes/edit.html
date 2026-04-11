@@ -37,7 +37,7 @@
                 <option th:each="room : ${auditoriums}"
                         th:value="${room.id}"
                         th:selected="${showtime.auditorium != null && room.id == showtime.auditorium.id}"
-                        th:text="${room.name}">
+                        th:text="${room.cinema != null ? room.cinema.name + ' - ' + room.name : room.name}">
                 </option>
             </select>
         </div>

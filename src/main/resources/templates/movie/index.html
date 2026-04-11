@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phim - Popcorn Cinema</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body class="movie-page-body">
+
+<div class="movie-layout">
+
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="movie-main">
+        <div class="site-container">
+
+            <section class="movie-section">
+
+                <div class="movie-tabs">
+                    <button type="button" class="movie-tab is-active" data-target="now-showing">
+                        Phim đang chiếu
+                    </button>
+                    <button type="button" class="movie-tab" data-target="upcoming">
+                        Phim sắp chiếu
+                    </button>
+                </div>
+
+                <div id="now-showing" class="movie-panel is-active">
+                    <div class="movie-list">
+
+                        <div class="movie-card" th:each="movie : ${nowShowing}">
+                            <div class="movie-poster">
+                                <img th:src="${movie.posterUrl != null ? movie.posterUrl : '/images/no-image.png'}"
+                                     alt="Phim">
+
+                                <div class="overlay">
+                                    <a th:href="@{/movie-detail(id=${movie.id})}" data-require-login="true">
+                                        <button class="btn-book">Mua vé</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <p th:if="${#lists.isEmpty(nowShowing)}" class="movie-empty">
+                        Hiện chưa có phim đang chiếu.
+                    </p>
+                </div>
+
+                <div id="upcoming" class="movie-panel">
+                    <div class="movie-list">
+
+                        <div class="movie-card" th:each="movie : ${upcoming}">
+                            <div class="movie-poster">
+                                <img th:src="${movie.posterUrl != null ? movie.posterUrl : '/images/no-image.png'}"
+                                     alt="Phim">
+
+                                <div class="overlay">
+                                    <a th:href="@{/movies/upcoming/{id}(id=${movie.id})}">
+                                        <button class="btn-book">Xem chi tiết</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <p th:if="${#lists.isEmpty(upcoming)}" class="movie-empty">
+                        Hiện chưa có phim sắp chiếu.
+                    </p>
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+
+</div>
+
+<script>
+    const tabs = document.querySelectorAll(".movie-tab");
+    const panels = document.querySelectorAll(".movie-panel");
+
+    tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            const targetId = tab.getAttribute("data-target");
+
+            tabs.forEach((t) => t.classList.remove("is-active"));
+            panels.forEach((p) => p.classList.remove("is-active"));
+
+            tab.classList.add("is-active");
+            document.getElementById(targetId)?.classList.add("is-active");
+        });
+    });
+</script>
+
+</body>
+</html>

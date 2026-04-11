@@ -2,6 +2,7 @@ package com.example.PopcornCinema.service.impl;
 
 import com.example.PopcornCinema.dto.CheckoutSummaryResponse;
 import com.example.PopcornCinema.entity.Promotion;
+import com.example.PopcornCinema.repository.BookingRepository;
 import com.example.PopcornCinema.repository.BookingComboRepository;
 import com.example.PopcornCinema.repository.PromotionRepository;
 import com.example.PopcornCinema.repository.SeatHoldRepository;
@@ -23,15 +24,18 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final SeatHoldRepository seatHoldRepository;
     private final BookingComboRepository bookingComboRepository;
     private final PromotionRepository promotionRepository;
+    private final BookingRepository bookingRepository;
 
     public CheckoutServiceImpl(ShowtimeRepository showtimeRepository,
                                SeatHoldRepository seatHoldRepository,
                                BookingComboRepository bookingComboRepository,
-                               PromotionRepository promotionRepository) {
+                               PromotionRepository promotionRepository,
+                               BookingRepository bookingRepository) {
         this.showtimeRepository = showtimeRepository;
         this.seatHoldRepository = seatHoldRepository;
         this.bookingComboRepository = bookingComboRepository;
         this.promotionRepository = promotionRepository;
+        this.bookingRepository = bookingRepository;
     }
 
     @Override
@@ -55,7 +59,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             comboTotal = BigDecimal.ZERO;
         }
 
-        BigDecimal discountAmount = calculateDiscount(promotionId, seatTotal.add(comboTotal));
+        BigDecimal discountAmount = calculateDiscount(userId, promotionId, seatTotal.add(comboTotal));
         BigDecimal totalAmount = seatTotal.add(comboTotal).subtract(discountAmount);
         if (totalAmount.compareTo(BigDecimal.ZERO) < 0) {
             totalAmount = BigDecimal.ZERO;
@@ -83,8 +87,13 @@ public class CheckoutServiceImpl implements CheckoutService {
         return response;
     }
 
-    private BigDecimal calculateDiscount(Long promotionId, BigDecimal subtotal) {
+    private BigDecimal calculateDiscount(Long userId, Long promotionId, BigDecimal subtotal) {
         if (promotionId == null) {
+            return BigDecimal.ZERO;
+        }
+
+        if (userId != null
+                && bookingRepository.existsByUserIdAndPromotionIdAndStatusIgnoreCase(userId, promotionId, "CONFIRMED")) {
             return BigDecimal.ZERO;
         }
 

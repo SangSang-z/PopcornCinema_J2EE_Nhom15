@@ -13,6 +13,8 @@ import java.util.List;
 
 public interface ShowtimeRepository extends JpaRepository<Showtime, Long> {
 
+    boolean existsByMovieId(Long movieId);
+
     @Query("""
         SELECT s FROM Showtime s
         WHERE s.auditorium.id = :auditoriumId

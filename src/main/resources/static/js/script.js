@@ -196,6 +196,7 @@ function initMovieModal(){
         let status = "";
         if (statusRaw === "NOW_SHOWING") status = "Đang chiếu";
         else if (statusRaw === "COMING_SOON") status = "Sắp chiếu";
+        else if (statusRaw === "STOPPED") status = "Ngừng chiếu";
 
         document.getElementById("modalTitle").innerText = title || "";
         document.getElementById("modalDirector").innerText = director || "";
@@ -220,13 +221,29 @@ function initChart(){
     const ctx = document.getElementById("revenueChart");
     if(!ctx || typeof Chart === "undefined") return;
 
+    let labels = Array.isArray(window.revenueLabels) ? window.revenueLabels : [];
+    let dataPoints = Array.isArray(window.revenueValues) ? window.revenueValues : [];
+
+    if (!labels.length) {
+        labels = buildLast7DateLabels();
+    }
+
+    if (!dataPoints.length || dataPoints.length !== labels.length) {
+        dataPoints = Array(labels.length).fill(0);
+    } else {
+        dataPoints = dataPoints.map(v => {
+            const num = Number(v);
+            return Number.isFinite(num) ? num : 0;
+        });
+    }
+
     new Chart(ctx,{
         type:"line",
         data:{
-            labels:["T2","T3","T4","T5","T6","T7","CN"],
+            labels: labels,
             datasets:[{
                 label:"Doanh thu",
-                data:[120,190,300,250,420,500,620],
+                data: dataPoints,
                 borderColor:"#2ecc71",
                 backgroundColor:"rgba(46,204,113,0.2)",
                 fill:true,
@@ -238,4 +255,20 @@ function initChart(){
         }
     });
 
+}
+
+function buildLast7DateLabels(){
+    const labels = [];
+    const today = new Date();
+    const start = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date(start);
+        d.setDate(start.getDate() - i);
+        const day = String(d.getDate()).padStart(2, "0");
+        const month = String(d.getMonth() + 1).padStart(2, "0");
+        labels.push(`${day}/${month}`);
+    }
+
+    return labels;
 }

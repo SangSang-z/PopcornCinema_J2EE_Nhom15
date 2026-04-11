@@ -1,6 +1,5 @@
 package com.example.PopcornCinema.controller;
 
-import com.example.PopcornCinema.entity.Seat;
 import com.example.PopcornCinema.repository.SeatRepository;
 
 import org.springframework.stereotype.Controller;

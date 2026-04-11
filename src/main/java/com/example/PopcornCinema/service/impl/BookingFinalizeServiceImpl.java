@@ -1,7 +1,6 @@
 package com.example.PopcornCinema.service.impl;
 
 import com.example.PopcornCinema.entity.Booking;
-import com.example.PopcornCinema.entity.BookingCombo;
 import com.example.PopcornCinema.entity.Payment;
 import com.example.PopcornCinema.entity.PaymentTransaction;
 import com.example.PopcornCinema.repository.BookingComboRepository;
@@ -113,7 +112,7 @@ public class BookingFinalizeServiceImpl implements BookingFinalizeService {
         booking.setShowtimeId(tx.getShowtimeId());
         booking.setTotalAmount(paidAmount);
         booking.setStatus("CONFIRMED");
-        booking.setPromotionId(null);
+        booking.setPromotionId(tx.getPromotionId());
         booking.setDiscountAmount(discountAmount);
         booking.setCreatedAt(LocalDateTime.now());
         booking.setUpdatedAt(LocalDateTime.now());

@@ -36,7 +36,7 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
     private static final String ACCOUNT_NO = "1030472376";
     private static final String ACCOUNT_NAME = "POPCORN CINEMA";
     private static final String QR_TEMPLATE = "compact2";
-    private static final long EXPIRE_MINUTES = 5;
+    private static final long EXPIRE_MINUTES = 2;
 
     private final PaymentTransactionRepository paymentTransactionRepository;
     private final CheckoutService checkoutService;
@@ -77,6 +77,11 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
 
         CheckoutSummaryResponse summary = checkoutService.getSummary(showtimeId, userId, request.getPromotionId());
         BigDecimal totalAmount = summary.getTotalAmount() == null ? BigDecimal.ZERO : summary.getTotalAmount();
+        BigDecimal discountAmount = summary.getDiscountAmount() == null ? BigDecimal.ZERO : summary.getDiscountAmount();
+
+        if (request.getPromotionId() != null && discountAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            request.setPromotionId(null);
+        }
 
         String orderCode = generateOrderCode();
         LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(EXPIRE_MINUTES);
@@ -85,6 +90,7 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
         tx.setOrderCode(orderCode);
         tx.setUserId(userId);
         tx.setShowtimeId(showtimeId);
+        tx.setPromotionId(request.getPromotionId());
         tx.setAmount(totalAmount);
         tx.setStatus(STATUS_PENDING);
         tx.setQrContent(buildTransferContent(orderCode, totalAmount));
@@ -225,7 +231,7 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
     }
 
     private String buildTransferContent(String orderCode, BigDecimal amount) {
-        return "CK " + orderCode;
+        return orderCode;
     }
 
     private String buildVietQrImageUrl(String orderCode, BigDecimal amount) {
@@ -244,5 +250,49 @@ public class PaymentTransactionServiceImpl implements PaymentTransactionService 
             return "0";
         }
         return amount.setScale(0, java.math.RoundingMode.HALF_UP).toPlainString();
+    }
+
+    @Override
+    @Transactional
+    public boolean confirmBySepay(String orderCode, BigDecimal amount) {
+        PaymentTransaction tx = getTransactionOrThrow(orderCode);
+        markExpiredIfNeeded(tx);
+
+        if (STATUS_PAID.equals(tx.getStatus())) {
+            return true;
+        }
+
+        if (STATUS_EXPIRED.equals(tx.getStatus())
+                || STATUS_CANCELLED.equals(tx.getStatus())
+                || STATUS_REJECTED.equals(tx.getStatus())
+                || STATUS_FAILED.equals(tx.getStatus())) {
+            return false;
+        }
+
+        if (!isAmountMatched(tx.getAmount(), amount)) {
+            return false;
+        }
+
+        tx.setStatus(STATUS_PAID);
+        tx.setPaidAt(LocalDateTime.now());
+        paymentTransactionRepository.save(tx);
+
+        try {
+            bookingFinalizeService.finalizeSuccessfulPayment(orderCode);
+            return true;
+        } catch (Exception ex) {
+            tx.setStatus(STATUS_FAILED);
+            paymentTransactionRepository.save(tx);
+            return false;
+        }
+    }
+
+    private boolean isAmountMatched(BigDecimal expected, BigDecimal actual) {
+        if (expected == null || actual == null) {
+            return false;
+        }
+        BigDecimal expectedRounded = expected.setScale(0, java.math.RoundingMode.HALF_UP);
+        BigDecimal actualRounded = actual.setScale(0, java.math.RoundingMode.HALF_UP);
+        return actualRounded.compareTo(expectedRounded) >= 0;
     }
 }

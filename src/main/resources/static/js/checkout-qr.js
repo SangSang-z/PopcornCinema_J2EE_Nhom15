@@ -62,38 +62,7 @@ function bindActions(tx) {
         });
     }
 
-    const mockPaidBtn = document.getElementById("mock-paid-btn");
-    if (mockPaidBtn) {
-        if (tx.status === "PENDING_CONFIRMATION") {
-            mockPaidBtn.disabled = true;
-            mockPaidBtn.textContent = "Đang chờ admin xác nhận";
-        }
-
-        mockPaidBtn.addEventListener("click", async () => {
-            mockPaidBtn.disabled = true;
-            mockPaidBtn.textContent = "Đang gửi yêu cầu...";
-
-            try {
-                const response = await fetch(`/api/payment-transactions/${encodeURIComponent(tx.orderCode)}/mark-submitted`, {
-                    method: "POST"
-                });
-
-                if (!response.ok) {
-                    throw new Error(await response.text());
-                }
-
-                tx.status = "PENDING_CONFIRMATION";
-                sessionStorage.setItem(PAYMENT_TX_KEY, JSON.stringify(tx));
-                mockPaidBtn.textContent = "Đang chờ admin xác nhận";
-                alert("Đã gửi yêu cầu. Vui lòng chờ admin xác nhận thanh toán.");
-            } catch (error) {
-                console.error("Không gửi được yêu cầu xác nhận thanh toán:", error);
-                alert("Không gửi được yêu cầu xác nhận. Bạn thử lại nhé.");
-                mockPaidBtn.disabled = false;
-                mockPaidBtn.textContent = "Tôi đã gửi lệnh chuyển khoản";
-            }
-        });
-    }
+    // SePay webhook tự động xác nhận nên không cần nút "Tôi đã gửi lệnh chuyển khoản"
 }
 
 async function resolveTransaction() {
@@ -192,48 +161,11 @@ function enhanceQrPanel(tx) {
     copyBtn.className = "btn-next";
     copyBtn.textContent = "Sao chép nội dung CK";
 
-    const mockPaidBtn = document.createElement("button");
-    mockPaidBtn.type = "button";
-    mockPaidBtn.id = "mock-paid-btn";
-    mockPaidBtn.className = "btn-next";
-    mockPaidBtn.textContent = "Tôi đã gửi lệnh chuyển khoản";
-
-    actionWrapper.append(copyBtn, mockPaidBtn);
+    actionWrapper.append(copyBtn);
     ticketInfo.appendChild(actionWrapper);
 }
 
-const mockPaidBtn = document.getElementById("mock-paid-btn");
-if (mockPaidBtn) {
-    if (tx.status === "PENDING_CONFIRMATION") {
-        mockPaidBtn.disabled = true;
-        mockPaidBtn.textContent = "Đang chờ admin xác nhận";
-    }
-
-    mockPaidBtn.addEventListener("click", async () => {
-        mockPaidBtn.disabled = true;
-        mockPaidBtn.textContent = "Đang gửi yêu cầu...";
-
-        try {
-            const response = await fetch(`/api/payment-transactions/${encodeURIComponent(tx.orderCode)}/mark-submitted`, {
-                method: "POST"
-            });
-
-            if (!response.ok) {
-                throw new Error(await response.text());
-            }
-
-            tx.status = "PENDING_CONFIRMATION";
-            sessionStorage.setItem(PAYMENT_TX_KEY, JSON.stringify(tx));
-            mockPaidBtn.textContent = "Đang chờ admin xác nhận";
-            alert("Đã gửi yêu cầu. Vui lòng chờ admin xác nhận thanh toán.");
-        } catch (error) {
-            console.error("Không gửi được yêu cầu xác nhận thanh toán:", error);
-            alert("Không gửi được yêu cầu xác nhận. Bạn thử lại nhé.");
-            mockPaidBtn.disabled = false;
-            mockPaidBtn.textContent = "Tôi đã gửi lệnh chuyển khoản";
-        }
-    });
-}
+// SePay webhook tự động xác nhận nên không cần nút xác nhận thủ công
 
 function startPaymentCountdown(tx) {
     const countdownEl = document.getElementById("payment-countdown");
@@ -280,15 +212,6 @@ function startPaymentPolling(orderCode) {
                 sessionStorage.setItem(LAST_PAID_ORDER_KEY, orderCode);
                 sessionStorage.removeItem(PAYMENT_TX_KEY);
                 window.location.href = `/ticket-success?orderCode=${encodeURIComponent(orderCode)}`;
-                return;
-            }
-
-            if (data.status === "PENDING_CONFIRMATION") {
-                const mockPaidBtn = document.getElementById("mock-paid-btn");
-                if (mockPaidBtn) {
-                    mockPaidBtn.disabled = true;
-                    mockPaidBtn.textContent = "Đang chờ admin xác nhận";
-                }
                 return;
             }
 

@@ -1,0 +1,44 @@
+{
+  "properties": [
+    {
+      "name": "sepay.api-key",
+      "type": "java.lang.String",
+      "description": "SePay API key for webhook authorization."
+    },
+    {
+      "name": "sepay.merchant-id",
+      "type": "java.lang.String",
+      "description": "SePay merchant identifier."
+    },
+    {
+      "name": "sepay.secret-key",
+      "type": "java.lang.String",
+      "description": "SePay secret key for signing or IPN validation."
+    },
+    {
+      "name": "sepay.gateway-url",
+      "type": "java.lang.String",
+      "description": "SePay hosted checkout gateway URL."
+    },
+    {
+      "name": "sepay.payment-method",
+      "type": "java.lang.String",
+      "description": "SePay payment method value to send in hosted checkout."
+    },
+    {
+      "name": "sepay.auto-confirm-on-return",
+      "type": "java.lang.Boolean",
+      "description": "Auto confirm payment on return from SePay if status is not final."
+    },
+    {
+      "name": "app.public-base-url",
+      "type": "java.lang.String",
+      "description": "Public base URL used for building SePay callback URLs."
+    },
+    {
+      "name": "app.local-base-url",
+      "type": "java.lang.String",
+      "description": "Local base URL used for redirecting users back to the app."
+    }
+  ]
+}

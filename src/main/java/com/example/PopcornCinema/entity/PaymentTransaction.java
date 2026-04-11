@@ -21,6 +21,9 @@ public class PaymentTransaction {
     @Column(name = "showtime_id", nullable = false)
     private Long showtimeId;
 
+    @Column(name = "promotion_id")
+    private Long promotionId;
+
     @Column(name = "booking_id")
     private Long bookingId;
 
@@ -55,6 +58,7 @@ public class PaymentTransaction {
     public String getOrderCode() { return orderCode; }
     public Long getUserId() { return userId; }
     public Long getShowtimeId() { return showtimeId; }
+    public Long getPromotionId() { return promotionId; }
     public Long getBookingId() { return bookingId; }
     public BigDecimal getAmount() { return amount; }
     public String getStatus() { return status; }
@@ -69,6 +73,7 @@ public class PaymentTransaction {
     public void setOrderCode(String orderCode) { this.orderCode = orderCode; }
     public void setUserId(Long userId) { this.userId = userId; }
     public void setShowtimeId(Long showtimeId) { this.showtimeId = showtimeId; }
+    public void setPromotionId(Long promotionId) { this.promotionId = promotionId; }
     public void setBookingId(Long bookingId) { this.bookingId = bookingId; }
     public void setAmount(BigDecimal amount) { this.amount = amount; }
     public void setStatus(String status) { this.status = status; }

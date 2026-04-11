@@ -13,7 +13,6 @@ import com.example.PopcornCinema.repository.ShowtimeRepository;
 import com.example.PopcornCinema.repository.TicketRepository;
 import com.example.PopcornCinema.repository.UserRepository;
 import com.example.PopcornCinema.service.PaymentTransactionService;
-import com.example.PopcornCinema.service.impl.PaymentTransactionServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -104,6 +102,32 @@ public class BookingAdminController {
         User user = userRepository.findById(tx.getUserId()).orElse(null);
         Showtime showtime = showtimeRepository.findById(tx.getShowtimeId()).orElse(null);
         Booking booking = tx.getBookingId() != null ? bookingRepository.findById(tx.getBookingId()).orElse(null) : null;
+        if (booking == null) {
+            booking = bookingRepository.findByBookingCode(tx.getOrderCode()).orElse(null);
+        }
+
+        boolean shouldPersist = false;
+        if (booking != null && tx.getBookingId() == null) {
+            tx.setBookingId(booking.getId());
+            shouldPersist = true;
+        }
+
+        String normalizedStatus = tx.getStatus() == null ? "" : tx.getStatus().toUpperCase(Locale.ROOT);
+        boolean isFailureStatus = "CANCELLED".equals(normalizedStatus)
+                || "EXPIRED".equals(normalizedStatus)
+                || "REJECTED".equals(normalizedStatus)
+                || "FAILED".equals(normalizedStatus);
+
+        String effectiveStatus = tx.getStatus();
+        if (booking != null && !isFailureStatus && !"PAID".equals(normalizedStatus)) {
+            effectiveStatus = "PAID";
+            tx.setStatus("PAID");
+            shouldPersist = true;
+        }
+
+        if (shouldPersist) {
+            paymentTransactionRepository.save(tx);
+        }
 
         String seatsText;
         if (booking != null) {
@@ -133,12 +157,12 @@ public class BookingAdminController {
         dto.setShowtimeStart(showtime != null ? showtime.getStartTime() : null);
         dto.setSeatsText(seatsText);
         dto.setAmount(tx.getAmount());
-        dto.setTransactionStatus(tx.getStatus());
+        dto.setTransactionStatus(effectiveStatus);
         dto.setBookingCode(booking != null ? booking.getBookingCode() : "");
         dto.setBookingStatus(booking != null ? booking.getStatus() : "");
         dto.setCreatedAt(tx.getCreatedAt());
-        dto.setCanConfirm(PaymentTransactionServiceImpl.STATUS_PENDING_CONFIRMATION.equals(tx.getStatus()));
-        dto.setCanReject(PaymentTransactionServiceImpl.STATUS_PENDING_CONFIRMATION.equals(tx.getStatus()));
+        dto.setCanConfirm(false);
+        dto.setCanReject(false);
         return dto;
     }
 }

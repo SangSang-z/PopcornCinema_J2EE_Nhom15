@@ -1,7 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phòng chiếu</title>
 
     <link rel="stylesheet" th:href="@{/css/admin.css}">
@@ -30,6 +32,7 @@
                 <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Rạp</th>
                     <th>Tên phòng</th>
                     <th>Số ghế</th>
                     <th>Hành động</th>
@@ -39,7 +42,7 @@
                 <tbody>
 
                 <tr th:if="${rooms == null || #lists.isEmpty(rooms)}">
-                    <td colspan="4" class="text-center text-muted">
+                    <td colspan="5" class="text-center text-muted">
                         Không có phòng chiếu nào
                     </td>
                 </tr>
@@ -47,6 +50,8 @@
                 <tr th:each="room : ${rooms}">
 
                     <td th:text="${room.id}"></td>
+
+                    <td th:text="${room.cinema != null ? room.cinema.name : 'N/A'}"></td>
 
                     <td th:text="${room.name}"></td>
 

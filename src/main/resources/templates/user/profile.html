@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin cá nhân - Popcorn Cinema</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="profile-page-body">
+
+<div class="profile-layout">
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="profile-main">
+        <div class="profile-container">
+            <div class="profile-card">
+                <h2>Thông tin cá nhân</h2>
+
+                <p th:if="${error}" class="profile-alert error" th:text="${error}"></p>
+                <p th:if="${success}" class="profile-alert success" th:text="${success}"></p>
+
+                <form th:action="@{/profile/update}" method="post" class="profile-form">
+                    <div class="profile-group">
+                        <label>Họ và tên</label>
+                        <input type="text" name="fullName" th:value="${user.fullName}" required>
+                    </div>
+
+                    <div class="profile-group">
+                        <label>Email</label>
+                        <input type="email" th:value="${user.email}" readonly>
+                    </div>
+
+                    <div class="profile-group">
+                        <label>Số điện thoại</label>
+                        <input type="text" name="phone" th:value="${user.phone}">
+                    </div>
+
+                    <div class="profile-group">
+                        <label>Ngày tạo</label>
+                        <input type="text"
+                               th:value="${user.createdAt != null ? #temporals.format(user.createdAt, 'dd/MM/yyyy HH:mm') : ''}"
+                               readonly>
+                    </div>
+
+                    <button type="submit" class="profile-save-btn">Lưu thay đổi</button>
+                </form>
+            </div>
+
+            <div class="profile-card profile-history">
+                <h2>Lịch sử đơn hàng</h2>
+
+                <div class="profile-history-table" th:if="${orderHistory != null and !orderHistory.isEmpty()}">
+                    <div class="profile-history-row profile-history-header">
+                        <div>Mã đơn</div>
+                        <div>Phim</div>
+                        <div>Suất chiếu</div>
+                        <div>Ghế</div>
+                        <div>Tổng tiền</div>
+                        <div>Thanh toán</div>
+                        <div>Trạng thái</div>
+                        <div>Ngày đặt</div>
+                    </div>
+
+                    <div class="profile-history-row" th:each="item : ${orderHistory}">
+                        <div data-label="Mã đơn" th:text="${item.bookingCode}"></div>
+                        <div data-label="Phim" th:text="${item.movieTitle != null ? item.movieTitle : 'N/A'}"></div>
+                        <div data-label="Suất chiếu">
+                            <span th:text="${item.showtimeStart != null ? #temporals.format(item.showtimeStart, 'HH:mm dd/MM/yyyy') : 'N/A'}"></span>
+                            <span th:if="${item.cinemaName != null}">
+                                <br>
+                                <small th:text="${item.cinemaName}"></small>
+                            </span>
+                            <span th:if="${item.auditoriumName != null}">
+                                <br>
+                                <small th:text="'Phòng ' + ${item.auditoriumName}"></small>
+                            </span>
+                        </div>
+                        <div data-label="Ghế" th:text="${item.seatsText}"></div>
+                        <div data-label="Tổng tiền" th:text="${#numbers.formatDecimal(item.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></div>
+                        <div data-label="Thanh toán">
+                            <span th:text="${item.paymentMethod != null ? item.paymentMethod : 'QR'}"></span>
+                            <br>
+                            <small th:text="${item.paymentStatus}"></small>
+                        </div>
+                        <div data-label="Trạng thái" th:text="${item.bookingStatus}"></div>
+                        <div data-label="Ngày đặt" th:text="${item.createdAt != null ? #temporals.format(item.createdAt, 'dd/MM/yyyy HH:mm') : ''}"></div>
+                    </div>
+                </div>
+
+                <p class="profile-history-empty" th:if="${orderHistory == null or orderHistory.isEmpty()}">
+                    Bạn chưa có đơn hàng nào.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+</div>
+
+</body>
+</html>

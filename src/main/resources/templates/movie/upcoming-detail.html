@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết phim sắp chiếu - Popcorn Cinema</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{/css/movie-detail.css}">
+</head>
+
+<body class="movie-page-body">
+
+<div th:replace="fragments/header :: header"></div>
+
+<div id="upcoming-detail-page" th:attr="data-movie-id=${movieId}"></div>
+
+<div class="movie-banner upcoming-banner">
+    <img id="upcoming-banner-img" src="" alt="Banner phim sắp chiếu">
+</div>
+
+<div class="container movie-detail upcoming-detail">
+    <a href="/movies" class="home-hero-btn ghost upcoming-back">
+        <i class="fa-solid fa-arrow-left"></i>
+        Trở về
+    </a>
+    <div class="movie-main">
+        <div class="movie-content">
+            <div class="movie-left">
+                <div class="movie-poster">
+                    <img id="upcoming-poster-img" src="" alt="Poster phim">
+                </div>
+
+                <div class="movie-info">
+                    <p class="home-hero-eyebrow upcoming-pill">Sắp chiếu</p>
+                    <h1 id="upcoming-title">Đang tải...</h1>
+
+                    <div class="movie-meta">
+                        <span class="tag" id="upcoming-age-rating">T18</span>
+                        <span id="upcoming-duration">0 phút</span>
+                    </div>
+
+                    <p class="rating" id="upcoming-release-date">Khởi chiếu: Đang cập nhật</p>
+
+                    <div class="movie-desc">
+                        <p><b>Ngôn ngữ:</b> <span id="upcoming-language"></span></p>
+                        <p><b>Thể loại:</b> <span id="upcoming-genres"></span></p>
+                        <p><b>Đạo diễn:</b> <span id="upcoming-director"></span></p>
+                        <p><b>Diễn viên:</b> <span id="upcoming-actors"></span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="movie-description">
+                <h3>Nội dung phim</h3>
+                <p id="upcoming-description-text">Đang tải nội dung phim...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<script th:src="@{/js/upcoming-detail.js}" defer></script>
+
+</body>
+</html>

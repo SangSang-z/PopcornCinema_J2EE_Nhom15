@@ -2,6 +2,7 @@ package com.example.PopcornCinema.controller;
 
 import com.example.PopcornCinema.entity.Movie;
 import com.example.PopcornCinema.repository.MovieRepository;
+import com.example.PopcornCinema.repository.ShowtimeRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,8 @@ public class MovieAdminController {
     @Autowired
     private MovieRepository movieRepository;
 
+    @Autowired
+    private ShowtimeRepository showtimeRepository;
     private static final String UPLOAD_DIR = "uploads/movies/";
 
     /* ===============================
@@ -212,6 +215,14 @@ public class MovieAdminController {
     =============================== */
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id){
+        if (showtimeRepository.existsByMovieId(id)) {
+            Movie existing = movieRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Movie khÃ´ng tá»“n táº¡i"));
+            existing.setStatus("STOPPED");
+            movieRepository.save(existing);
+            return "redirect:/admin/movies";
+        }
+
         movieRepository.deleteById(id);
         return "redirect:/admin/movies";
     }

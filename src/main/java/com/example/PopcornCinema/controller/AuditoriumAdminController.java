@@ -36,7 +36,7 @@ public class AuditoriumAdminController {
     @GetMapping
     public String listRooms(Model model) {
 
-        List<Auditorium> rooms = auditoriumRepository.findAll();
+        List<Auditorium> rooms = auditoriumRepository.findAllWithCinema();
 
         model.addAttribute("rooms", rooms);
         model.addAttribute("activePage", "rooms");

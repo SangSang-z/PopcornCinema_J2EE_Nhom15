@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khuyến mãi - Popcorn Cinema</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="promotion-page-body">
+
+<div class="promotion-layout">
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="promotion-main">
+        <div class="promotion-content">
+            <section class="promotion-left">
+                <h2 class="promotion-section-title">ƯU ĐÃI</h2>
+
+                <div class="promotion-grid-left">
+
+                    <p th:if="${#lists.isEmpty(promotions)}" class="promotion-empty">
+                        Hiện chưa có mã khuyến mãi nào.
+                    </p>
+
+                    <div class="promo-poster" th:each="p : ${promotions}">
+                        <a th:href="@{/promotions/{id}(id=${p.id})}" class="promo-link">
+                            <img th:src="@{${#strings.isEmpty(p.posterUrl) ? '/images/no-image.png' : p.posterUrl}}"
+                                 alt="Khuyến mãi">
+                            <div class="promo-overlay">
+                                <span class="promo-code"
+                                      th:text="${p.code != null ? p.code : 'KHUYENMAI'}"></span>
+                            </div>
+                        </a>
+                        <div class="promo-info">
+                            <h3 class="promo-title" th:text="${p.title}"></h3>
+                            <p class="promo-discount" th:if="${p.discountPercent != null}"
+                               th:text="${'Giảm ' + p.discountPercent + '%'}"></p>
+                            <p class="promo-discount"
+                               th:if="${p.discountPercent == null and p.discountAmount != null}"
+                               th:text="${'Giảm ' + p.discountAmount + ' VNĐ'}"></p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="promotion-right">
+                <h2 class="promotion-section-title">PHIM SẮP CHIẾU</h2>
+
+                <div class="showing-movie-list">
+                    <p th:if="${#lists.isEmpty(upcomingMovies)}" class="promotion-empty">
+                        Hiện chưa có phim sắp chiếu.
+                    </p>
+
+                    <div class="showing-banner" th:each="movie : ${upcomingMovies}">
+                        <a th:href="@{/movie-detail(id=${movie.id})}">
+                            <img th:src="${movie.posterUrl != null ? movie.posterUrl : '/images/no-image.png'}"
+                                 th:alt="${movie.title}">
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+</div>
+
+</body>
+</html>

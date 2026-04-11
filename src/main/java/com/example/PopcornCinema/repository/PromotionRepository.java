@@ -14,7 +14,6 @@ public interface PromotionRepository extends JpaRepository<Promotion, Long> {
         SELECT *
         FROM promotions p
         WHERE p.status = 'ACTIVE'
-          AND NOW() BETWEEN p.start_date AND p.end_date
         ORDER BY p.id
     """, nativeQuery = true)
     List<Promotion> findActivePromotions();

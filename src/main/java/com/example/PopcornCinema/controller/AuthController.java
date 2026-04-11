@@ -135,6 +135,6 @@ public class AuthController {
     // ===============================
     @GetMapping("/home")
     public String home(){
-        return "index";
+        return "redirect:/";
     }
 }

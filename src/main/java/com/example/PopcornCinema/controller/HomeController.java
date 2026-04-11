@@ -1,16 +1,12 @@
 package com.example.PopcornCinema.controller;
 
-import com.example.PopcornCinema.entity.Movie;
 import com.example.PopcornCinema.repository.MovieRepository;
-
-import jakarta.servlet.http.HttpSession;
+import com.example.PopcornCinema.repository.PromotionRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.List;
 
 @Controller
 public class HomeController {
@@ -18,11 +14,20 @@ public class HomeController {
     @Autowired
     private MovieRepository movieRepository;
 
+    @Autowired
+    private PromotionRepository promotionRepository;
+
     @GetMapping("/")
     public String home(Model model){
+        var nowShowing = movieRepository
+                .findByStatusOrderByReleaseDateDescIdDesc("NOW_SHOWING");
+        var upcoming = movieRepository
+                .findByStatusOrderByReleaseDateDescIdDesc("COMING_SOON");
+        var promotions = promotionRepository.findActivePromotions();
 
-        List<Movie> movies = movieRepository.findAll();
-        model.addAttribute("movies", movies);
+        model.addAttribute("nowShowing", nowShowing);
+        model.addAttribute("upcoming", upcoming);
+        model.addAttribute("promotions", promotions);
 
         return "index";
     }

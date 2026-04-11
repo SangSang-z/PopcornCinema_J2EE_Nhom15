@@ -1,4 +1,6 @@
 const PAYMENT_TX_KEY = "paymentTx";
+const LAST_PAID_ORDER_KEY = "lastPaidOrderCode";
+
 function getCurrentUserId() {
     return Number(document.getElementById("app-user")?.value || 0);
 }
@@ -26,38 +28,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    document.getElementById("back-btn").href = `/payment?showtimeId=${showtimeId}`;
-
-    document.getElementById("continue-btn").addEventListener("click", async () => {
-        const promotionId = document.getElementById("promotion-select").value || null;
-
-        try {
-            sessionStorage.removeItem("paymentTx"); 
-            sessionStorage.removeItem("lastPaidOrderCode");
-            const response = await fetch(`/api/showtimes/${showtimeId}/payment-transactions`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    userId: currentUserId,
-                    promotionId: promotionId
-                })
-            });
-
-            if (!response.ok) {
-                const text = await response.text();
-                console.error("Create payment transaction failed:", text);
-                alert("Không tạo được giao dịch thanh toán");
-                return;
-            }
-
-            const tx = await response.json();
-            sessionStorage.setItem(PAYMENT_TX_KEY, JSON.stringify(tx));
-            window.location.href = `/checkout-qr?showtimeId=${showtimeId}&orderCode=${encodeURIComponent(tx.orderCode)}`;
-        } catch (error) {
-            console.error("Lỗi khi tạo giao dịch:", error);
-            alert("Không tạo được giao dịch thanh toán");
-        }
-    });
+    const backBtn = document.getElementById("back-btn");
+    if (backBtn) {
+        backBtn.href = `/payment?showtimeId=${showtimeId}`;
+    }
 
     const applyPromoBtn = document.getElementById("apply-promo-btn");
     if (applyPromoBtn) {
@@ -70,10 +44,72 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
     }
+
+    const continueBtn = document.getElementById("continue-btn");
+    if (continueBtn) {
+        continueBtn.addEventListener("click", async () => {
+            await startSepayCheckout(showtimeId, currentUserId);
+        });
+    }
 });
 
+async function startSepayCheckout(showtimeId, userId) {
+    const promotionId = document.getElementById("promotion-select")?.value || null;
+    const continueBtn = document.getElementById("continue-btn");
+
+    if (continueBtn) {
+        continueBtn.disabled = true;
+        continueBtn.textContent = "Đang tạo giao dịch...";
+    }
+
+    try {
+        sessionStorage.removeItem(PAYMENT_TX_KEY);
+        sessionStorage.removeItem(LAST_PAID_ORDER_KEY);
+
+        const response = await fetch(`/api/showtimes/${showtimeId}/payment-transactions`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                userId: userId,
+                promotionId: promotionId
+            })
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            console.error("Create payment transaction failed:", text);
+            alert("Không tạo được giao dịch thanh toán");
+            if (continueBtn) {
+                continueBtn.disabled = false;
+                continueBtn.textContent = "Thanh toán SePay";
+            }
+            return;
+        }
+
+        const tx = await response.json();
+        if (!tx?.orderCode) {
+            alert("Thiếu mã đơn hàng từ máy chủ");
+            if (continueBtn) {
+                continueBtn.disabled = false;
+                continueBtn.textContent = "Thanh toán SePay";
+            }
+            return;
+        }
+
+        sessionStorage.setItem(PAYMENT_TX_KEY, JSON.stringify(tx));
+        window.location.href = `/sepay/checkout?orderCode=${encodeURIComponent(tx.orderCode)}`;
+    } catch (error) {
+        console.error("Lỗi khi tạo giao dịch:", error);
+        alert("Không tạo được giao dịch thanh toán");
+        if (continueBtn) {
+            continueBtn.disabled = false;
+            continueBtn.textContent = "Thanh toán SePay";
+        }
+    }
+}
+
 async function loadSummary(showtimeId) {
-     const currentUserId = getCurrentUserId();
+    const currentUserId = getCurrentUserId();
     const promotionId = document.getElementById("promotion-select")?.value || "";
     const url = promotionId
         ? `/api/showtimes/${showtimeId}/checkout-summary?userId=${currentUserId}&promotionId=${promotionId}`
@@ -129,5 +165,5 @@ async function loadPromotions() {
 }
 
 function formatCurrency(value) {
-    return Number(value).toLocaleString("vi-VN") + " đ";
+    return Number(value || 0).toLocaleString("vi-VN") + " đ";
 }

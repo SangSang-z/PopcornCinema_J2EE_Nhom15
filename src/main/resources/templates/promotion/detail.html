@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết khuyến mãi - Popcorn Cinema</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="promotion-page-body">
+
+<div class="promotion-layout">
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="promotion-main">
+        <section class="promo-detail-section">
+            <div class="promo-detail-card">
+                <div class="promo-detail-media">
+                    <img th:src="@{${#strings.isEmpty(promotion.posterUrl) ? '/images/no-image.png' : promotion.posterUrl}}"
+                         alt="Khuyến mãi"
+                         class="promo-detail-img">
+                </div>
+
+                <div class="promo-detail-info">
+                    <div class="promo-detail-header">
+                        <h1 class="promo-detail-title" th:text="${promotion.title}">Khuyến mãi</h1>
+                        <span class="promo-detail-code" th:text="${promotion.code}">PROMO</span>
+                    </div>
+
+                    <p class="promo-detail-desc" th:text="${promotion.description}">
+                        Mô tả khuyến mãi
+                    </p>
+
+                    <div class="promo-detail-meta">
+                        <span class="promo-detail-pill"
+                              th:if="${promotion.discountPercent != null}"
+                              th:text="${'Giảm ' + promotion.discountPercent + '%'}"></span>
+                        <span class="promo-detail-pill"
+                              th:if="${promotion.discountPercent == null and promotion.discountAmount != null}"
+                              th:text="${'Giảm ' + promotion.discountAmount + ' VND'}"></span>
+                        <span class="promo-detail-pill"
+                              th:if="${promotion.minOrderValue != null}"
+                              th:text="${'Đơn tối thiểu ' + promotion.minOrderValue + ' VND'}"></span>
+                    </div>
+
+                    <div class="promo-detail-time">
+                        <div class="promo-detail-time-row"
+                             th:if="${promotion.startDate != null}">
+                            <span>Bắt đầu</span>
+                            <strong th:text="${#temporals.format(promotion.startDate, 'dd/MM/yyyy HH:mm')}"></strong>
+                        </div>
+                        <div class="promo-detail-time-row"
+                             th:if="${promotion.endDate != null}">
+                            <span>Kết thúc</span>
+                            <strong th:text="${#temporals.format(promotion.endDate, 'dd/MM/yyyy HH:mm')}"></strong>
+                        </div>
+                    </div>
+
+                    <div class="promo-detail-alert promo-detail-alert--success"
+                         th:if="${saveSuccess}" th:text="${saveSuccess}"></div>
+                    <div class="promo-detail-alert promo-detail-alert--error"
+                         th:if="${saveError}" th:text="${saveError}"></div>
+
+                    <form th:action="@{/promotions/save}" method="post" class="promo-detail-actions">
+                        <input type="hidden" name="promotionId" th:value="${promotion.id}"/>
+
+                        <button type="submit"
+                                class="promo-save-btn"
+                                data-require-login="true"
+                                th:disabled="${savedAlready}"
+                                th:text="${savedAlready ? 'Đã lưu mã' : 'Lưu khuyến mãi'}">
+                            Lưu khuyến mãi
+                        </button>
+                    </form>
+
+                    <a th:href="@{/promotions}" class="promo-detail-back">← Quay lại</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div th:replace="fragments/footer :: footer"></div>
+</div>
+
+</body>
+</html>

@@ -14,9 +14,8 @@
             </a>
 
             <ul class="nav-links">
-                <li><a href="#">Phim</a></li>
-                <li><a href="#">Sự kiện</a></li>
-                <li><a href="#">Rạp / Giá vé</a></li>
+                <li><a th:href="@{/movies}">Phim</a></li>
+                <li><a th:href="@{/promotions}">Sự kiện</a></li>
             </ul>
         </div>
 
@@ -49,14 +48,9 @@
                 <!-- DROPDOWN -->
                 <div class="dropdown-menu">
 
-                    <a href="#">
+                    <a th:href="@{/profile}">
                         <i class="fa-regular fa-user"></i>
                         Thông tin cá nhân
-                    </a>
-
-                    <a href="#">
-                        <i class="fa-solid fa-key"></i>
-                        Đổi mật khẩu
                     </a>
 
                     <a th:href="@{/logout}" class="logout">
@@ -71,6 +65,33 @@
         </div>
 
     </nav>
+
+    <script>
+        document.addEventListener("click", (event) => {
+            const trigger = event.target.closest("[data-require-login='true']");
+            if (!trigger) return;
+
+            const userId = document.getElementById("app-user")?.value;
+            if (!userId) {
+                event.preventDefault();
+                window.location.href = "/login";
+            }
+        });
+
+        const userDropdown = document.querySelector(".user-dropdown");
+        const userToggle = document.querySelector(".user-toggle");
+
+        if (userDropdown && userToggle) {
+            userToggle.addEventListener("click", (event) => {
+                event.stopPropagation();
+                userDropdown.classList.toggle("open");
+            });
+
+            document.addEventListener("click", () => {
+                userDropdown.classList.remove("open");
+            });
+        }
+    </script>
 </header>
 
 </body>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Thanh toán</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <link rel="stylesheet" th:href="@{/css/checkout.css}">
@@ -21,7 +22,7 @@
 <div class="checkout-page">
     <div class="checkout-container">
         <div class="checkout-left">
-            <div class="checkout-card">
+            <div class="checkout-card" id="promo-card">
                 <h3>Khuyến mãi</h3>
 
                 <div class="promo-row">
@@ -32,13 +33,14 @@
                 </div>
             </div>
 
-            <div class="checkout-card">
+            <div class="checkout-card" id="payment-method-card">
                 <h3>Phương thức thanh toán</h3>
                 <label class="payment-method">
                     <input type="radio" name="paymentMethod" value="QR" checked>
                     Thanh toán mã QR với ứng dụng di động
                 </label>
             </div>
+
         </div>
 
         <div class="checkout-right">
@@ -59,11 +61,12 @@
                     <p id="ticket-combo-total">Combo: 0 đ</p>
                     <p id="ticket-discount">Giảm giá: 0 đ</p>
                     <p class="ticket-total">Tổng cộng: <span id="ticket-total">0 đ</span></p>
+
                 </div>
 
                 <div class="ticket-actions">
                     <a id="back-btn" href="#" class="btn-back">Quay lại</a>
-                    <button id="continue-btn" class="btn-next">Tiếp tục</button>
+                    <button id="continue-btn" class="btn-next">Thanh toán SePay</button>
                 </div>
             </div>
         </div>

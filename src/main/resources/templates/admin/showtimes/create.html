@@ -46,9 +46,9 @@
                             <label class="form-label">Phòng chiếu</label>
                             <select name="auditoriumId" class="form-select" required>
                                 <option value="">-- Chọn phòng --</option>
-                                <option th:each="room : ${rooms}"
+                                <option th:each="room : ${auditoriums}"
                                         th:value="${room.id}"
-                                        th:text="${room.name}">
+                                        th:text="${room.cinema != null ? room.cinema.name + ' - ' + room.name : room.name}">
                                 </option>
                             </select>
                         </div>

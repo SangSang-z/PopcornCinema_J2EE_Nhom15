@@ -3,6 +3,7 @@ package com.example.PopcornCinema.controller;
 import com.example.PopcornCinema.entity.*;
 import com.example.PopcornCinema.repository.*;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +33,7 @@ public class ShowtimeAdminController {
     // LIST
     @GetMapping
     public String list(Model model){
-        model.addAttribute("showtimes", showtimeRepo.findAll());
+        model.addAttribute("showtimes", showtimeRepo.findAll(Sort.by(Sort.Direction.DESC, "id")));
         model.addAttribute("activePage","showtimes");
         return "admin/showtimes/list";
     }

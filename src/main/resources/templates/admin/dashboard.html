@@ -131,6 +131,10 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        window.revenueLabels = /*[[${revenueLabels}]]*/ [];
+        window.revenueValues = /*[[${revenueValues}]]*/ [];
+    </script>
     <script th:src="@{/js/script.js}"></script>
 
 </body>
